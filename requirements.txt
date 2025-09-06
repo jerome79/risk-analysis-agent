@@ -1,0 +1,16 @@
+pandas==2.2.2
+python-dotenv==1.0.1
+streamlit==1.37.1
+matplotlib==3.9.0
+
+langchain==0.2.16
+langchain-community==0.2.16
+chromadb==0.5.5
+
+transformers==4.43.3
+torch>=2.2
+sentencepiece>=0.2
+
+pydantic==2.7.4
+rapidfuzz==3.9.6
+sentence-transformers

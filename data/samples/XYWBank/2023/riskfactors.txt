@@ -1,0 +1,4 @@
+XYZ Bank is exposed to credit risk from borrowers who may default on loans during economic downturns.
+Regulatory changes in capital requirements under Basel III could constrain growth strategies.
+The institution also notes reputational risk arising from compliance failures and misconduct cases.
+Operational risks include reliance on outdated IT infrastructure vulnerable to system outages.

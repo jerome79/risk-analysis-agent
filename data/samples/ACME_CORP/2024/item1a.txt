@@ -1,0 +1,4 @@
+Company ACME Corporation faces several risks that could adversely affect operations.
+Liquidity shortages may occur if credit markets tighten, restricting access to short-term funding.
+Increased competition and rapid technological change create market risks that could erode margins.
+The company also acknowledges cybersecurity threats targeting its customer data systems.
