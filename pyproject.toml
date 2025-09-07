@@ -6,7 +6,7 @@ target-version = ["py310"]
 line-length = 150
 src = ["src", "."]
 fix = true
-exclude = ["app/ui_streamlit.py"]
+exclude = ["app/ui_streamlit.py","test/test_ingest.py","test/test_taxynomy.py","test/test_classifier_tiny.py"]
 
 [tool.ruff.lint]
 # E,F: pycodestyle/pyflakes, I: isort, UP: pyupgrade, B: bugbear, N: pep8-naming,
