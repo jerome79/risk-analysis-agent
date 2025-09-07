@@ -2,11 +2,12 @@ import os
 
 import pandas as pd
 from langchain_community.vectorstores import Chroma
+from langchain_core.vectorstores import VectorStoreRetriever
 
 from app.embeddings import get_embedder
 
 
-def get_vectorstore(persist_dir: str | None = None) -> Chroma:
+def get_vectorstore(persist_dir: str | None = None) -> VectorStoreRetriever:
     """
     Returns a Chroma vector store instance, using the provided persist directory or the default from environment.
 
@@ -39,7 +40,7 @@ def index_dataframe(df: pd.DataFrame, persist_dir: str | None = None) -> Chroma:
     return vs
 
 
-def get_retriever(k: int = 8, persist_dir: str | None = None, where: dict | None = None) -> "Chroma":
+def get_retriever(k: int = 8, persist_dir: str | None = None, where: dict | None = None) -> Chroma:
     """
     Returns a retriever object from the Chroma vector store.
 
