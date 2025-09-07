@@ -1,20 +1,22 @@
-# 🛡️ Risk Analysis Agent
+# Risk Analysis Agent
 
-A domain-focused extension of your Finance RAG agent: it adds a **risk classifier layer** on top of retrieval so outputs are **structured, explainable, and auditable** for PMs and Risk teams.
+A domain-focused extension of the Finance RAG Agent: adds a risk classifier layer on top of retrieval so outputs are structured, explainable, and auditable for Portfolio Managers and Risk teams.
 
-## 🎯 Business goal
-Turn dense disclosures (10-K Item 1A, KIIDs, prospectuses) into **actionable, comparable risk insights**:
-- Classify chunks into a **risk taxonomy**
-- Summarize top risks with **citations**
-- Enable **Q&A** with sources
-- (Optional) Compare **YoY changes**
+## 🎯 Business Goal
 
-**Personas:** Portfolio Managers, Traders, CRO/Risk, Product.
+* Turn dense disclosures (10-K Item 1A, KIIDs, prospectuses) into actionable, comparable risk insights:
 
----
+* Classify chunks into a risk taxonomy
+
+* Summarize top risks with citations
+
+* Enable Q&A with source documents
+
+* Compare year-over-year changes (optional)
+
+* Personas: Portfolio Managers, Traders, Chief Risk Officers, Product Managers.
 
 ## 🧱 Architecture
-
 TXT filings (issuer/year/*.txt)
 │
 ▼
@@ -34,99 +36,146 @@ LLM (Ollama/Mistral) — local, free
 Embeddings (MiniLM) — local, free
 Zero-shot (BART-MNLI) — local, free
 
-
----
-
 ## ✨ Features
-- Ingest `.txt` filings and **chunk** with provenance (issuer, year, file, chunk_id)
-- **Local embeddings** → **Chroma** persistent vector DB
-- **Zero-shot risk classification** (BART-MNLI) across a **risk taxonomy**
-- **Executive summary** grouped by categories with **citations**
-- **Q&A** over the corpus with sources
-- Fully **local & free** (Ollama + HF models)
 
----
+* Ingest .txt filings and chunk with provenance (issuer, year, file, chunk_id)
 
-## 🚀 Quick start
+* Local embeddings → Chroma persistent vector DB
 
-```bash
+* Zero-shot risk classification (BART-MNLI) across a risk taxonomy
+
+* Executive summary grouped by categories with citations
+
+* Q&A over the corpus with sources
+
+* Fully local & free (Ollama + Hugging Face models)
+
+## 🚀 Quick Start
 git clone <repo> risk-analysis-agent
 cd risk-analysis-agent
 python -m venv .venv && . .venv/Scripts/activate   # (Windows)
 pip install -r requirements.txt
 cp .env.example .env
-```
 
-# Add data:
-data/samples/ACME_CORP/2024/item_1a.txt  (plain text)
+### Add data:
+data/samples/ACME_CORP/2024/item_1a.txt
 
+### Run the UI:
 streamlit run app/ui_streamlit.py
 
-# Risk taxonomy
+## 🗂️ Risk Taxonomy
 
-Default labels:
+Default labels (see app/taxonomy.py):
 
-Market, Liquidity, Credit, Operational, Cybersecurity, Regulatory/Legal,
-Supply Chain, ESG/Climate, Reputational, Model Risk
+* Market
 
-Edit in app/taxonomy.py.
+* Liquidity
 
-## 🔍 Zero-shot classification (how it works)
+* Credit
 
-We use a pretrained NLI model (BART-MNLI).
+* Operational
+
+* Cybersecurity
+
+* Regulatory / Legal
+
+* Supply Chain
+
+* ESG / Climate
+
+* Reputational
+
+* Model Risk
+
+You can edit app/taxonomy.py to customize.
+
+## 🔍 Zero-Shot Classification (How It Works)
+
+* Pretrained NLI model (facebook/bart-large-mnli)
+
 For each chunk and label, we score entailment of the hypothesis:
 
-“This text is about <label>.”
-The entailment probability becomes the label score.
-Top-k labels are shown per chunk with confidence.
+* “This text is about <label>.”
 
-## 🔮 Classifier roadmap (free, API-less)
+The entailment probability = confidence score
 
-Phase 1 – Zero-Shot Baseline (current)
+Top-k labels (or all above threshold) are displayed per chunk
 
-facebook/bart-large-mnli (free, local)
+## 🔮 Classifier Roadmap (All Free & Local)
 
-No training needed, good baseline
+* Phase 1 – Zero-Shot Baseline (current)
 
-Phase 2 – Few-Shot Prompting (upgrade)
+facebook/bart-large-mnli
+
+No training needed, robust baseline
+
+* Phase 2 – Few-Shot Prompting
 
 Use local LLM (Mistral via Ollama)
 
 Add labeled examples in prompt for domain adaptation
 
-Phase 3 – Fine-Tuned Local Classifier
+* Phase 3 – Fine-Tuned Local Classifier
 
-Train RoBERTa/FinBERT locally on small labeled set (200–500 chunks)
+Train RoBERTa/FinBERT on a small labeled set (200–500 chunks)
 
-Phase 4 – Hybrid / Rules
+* Phase 4 – Hybrid / Rules
 
-Add keyword/regex rules for transparency + combine with ML scores
+Add keyword/regex rules for transparency
 
-## 🧪 Repo layout
+Combine with ML scores for robustness
+
+## 📊 Example Output
+
+Sample input: ACME 2024, Item 1A
+
+Analyze tab output:
+
+Chunk ID	Risks	Confidence
+item1a.txt::0	Operational (0.86), Market (0.61)	High
+item1a.txt::1	Liquidity (0.72), Credit (0.55)	Medium
+item1a.txt::2	Cybersecurity (0.81)	High
+
+
+
+# 🧪 Repo Layout
 app/
   ├─ taxonomy.py      # labels & helpers
   ├─ ingest.py        # read .txt, chunk, normalize
   ├─ embeddings.py    # MiniLM embeddings (HF)
-  ├─ retriever.py     # Chroma index + retriever
+  ├─ retriever.py     # Chroma index + retriever (MMR, filters)
   ├─ classifier.py    # zero-shot NLI tags
   ├─ prompts.py       # summary + QA prompts (citations)
-  ├─ llm.py           # Ollama (Mistral)
+  ├─ llm.py           # Ollama (Mistral/Gemma)
   └─ ui_streamlit.py  # Streamlit UI
 
 scripts/
-  └─ ingest_cli.py
+  ├─ ingest_cli.py
+  └─ demo_classifier.py
 
 data/
   └─ samples/         # place issuer/year/*.txt here
 
 ## 🧰 Notes
 
-For PDFs, convert to .txt with an external tool (e.g., pdfminer.six, pypdf) before ingestion.
+For PDFs, convert to .txt with tools like pdfminer.six or pypdf before ingestion
 
-Set CHROMA_PERSIST_DIR in .env to control the DB location.
+Set CHROMA_PERSIST_DIR in .env to control DB location
 
-Keep LLM_TEMPERATURE low (0.0–0.2) for consistent summaries.
+Keep LLM_TEMPERATURE low (0.0–0.2) for consistent summaries
 
 ## 📜 License
 
 MIT
+
+👉 This new README now has:
+
+Clearer flow (goal → features → quick start → taxonomy → roadmap → output)
+
+Example risk output table (you can paste your screenshot too)
+
+Classifier roadmap staged for interviews
+
+Do you want me to also add a “Comparison” section (Project 1 vs Project 2 vs Project 3) in the README so you can show progression to interviewers?
+
+Sources

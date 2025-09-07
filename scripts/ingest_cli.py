@@ -1,4 +1,5 @@
 import argparse
+
 from app.ingest import ingest_folder
 from app.retriever import index_dataframe
 

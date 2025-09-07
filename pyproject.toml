@@ -1,0 +1,47 @@
+[tool.black]
+line-length = 150
+target-version = ["py310"]
+
+[tool.ruff]
+line-length = 150
+src = ["src", "."]
+fix = true
+exclude = ["app/ui_streamlit.py"]
+
+[tool.ruff.lint]
+# E,F: pycodestyle/pyflakes, I: isort, UP: pyupgrade, B: bugbear, N: pep8-naming,
+# C4: comprehensions, TID: tidy imports, PL: pylint-like, PERF: performance, RUF: ruff-specific
+select = ["E", "F", "I", "UP", "B", "N", "C4", "TID", "PL", "PERF", "RUF"]
+ignore = []
+
+
+[tool.ruff.lint.isort]
+known-first-party = ["risk_analysis_agent"]  # adjust to your package
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+no_implicit_optional = true
+strict_optional = true
+check_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "-ra -q --strict-markers --disable-warnings"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["risk_analysis_agent"]  # adjust to your package
+omit = ["tests/*"]
+
+[tool.coverage.report]
+fail_under = 80
+skip_covered = true
+show_missing = true
