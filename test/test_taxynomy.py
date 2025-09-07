@@ -13,8 +13,9 @@ def test_taxonomy_labels_and_keys() -> None:
     Test that canonical_labels returns a list of labels and to_key produces valid keys.
     """
     labels = canonical_labels()
+    baseline = 5
     assert isinstance(labels, list)
-    assert len(labels) >= 5  # baseline sanity
+    assert len(labels) >= baseline  # baseline sanity
     # keys should be lowercase, spaces->underscores, slashes removed
     for lab in labels:
         k = to_key(lab)

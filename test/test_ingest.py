@@ -6,8 +6,10 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from pathlib import Path
+
 import pandas as pd
-from app.ingest import ingest_folder, SCHEMA
+
+from app.ingest import SCHEMA, ingest_folder
 
 
 def test_ingest_creates_expected_schema_and_rows(tmp_path: Path) -> None:

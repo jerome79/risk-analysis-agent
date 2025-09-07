@@ -1,7 +1,7 @@
-import os
-import pytest
 import sys
 from pathlib import Path
+
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -25,9 +25,11 @@ def test_zero_shot_classifier_with_tiny_model(monkeypatch: pytest.MonkeyPatch) -
         "There is a risk of cyber attacks on our infrastructure.",
     ]
     out = zsl.classify(texts, top_k=2)
+    baseline_low = 1
+    baseline_up = 2
     assert len(out) == len(texts)
     for labels in out:
-        assert 1 <= len(labels) <= 2
+        assert baseline_low <= len(labels) <= baseline_up
         for lab, prob in labels:
             assert isinstance(lab, str)
             assert 0.0 <= prob <= 1.0
