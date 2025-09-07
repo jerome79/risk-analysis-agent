@@ -14,5 +14,14 @@ def index_dataframe(df, persist_dir: str | None = None):
     vs.persist()
     return vs
 
-def get_retriever(k: int = 8, persist_dir: str | None = None):
-    return get_vectorstore(persist_dir).as_retriever(search_kwargs={"k": k})
+def get_retriever(k: int = 8, persist_dir: str | None = None, where: dict | None = None):
+    vs = get_vectorstore(persist_dir)
+    return vs.as_retriever(
+        search_type="mmr",
+        search_kwargs={
+            "k": k,
+            "fetch_k": max(20, k * 2),
+            "lambda_mult": 0.2,
+            "filter": where or {},   # optional metadata filter
+        },
+    )

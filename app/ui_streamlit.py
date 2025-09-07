@@ -57,9 +57,9 @@ with tab_analyze:
 
     k = st.slider("Top-k chunks to retrieve", 4, 24, 12, 1)
     if st.button("Run analysis", use_container_width=True):
-        retriever = get_retriever(k=k)
+        retriever = get_retriever(k=k,where={"$and": [{"issuer": issuer}, {"fiscal_year": year}]})
         query = f"{issuer} {year} {focus}"
-        docs = retriever.get_relevant_documents(query)
+        docs = retriever.invoke(query)
 
         if not docs:
             st.warning("No documents returned. Did you index the right issuer/year?")
