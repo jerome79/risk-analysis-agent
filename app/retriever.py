@@ -7,7 +7,7 @@ from langchain_core.vectorstores import VectorStoreRetriever
 from app.embeddings import get_embedder
 
 
-def get_vectorstore(persist_dir: str | None = None) -> VectorStoreRetriever:
+def get_vectorstore(persist_dir: str | None = None) -> Chroma:
     """
     Returns a Chroma vector store instance, using the provided persist directory or the default from environment.
 
@@ -40,7 +40,7 @@ def index_dataframe(df: pd.DataFrame, persist_dir: str | None = None) -> Chroma:
     return vs
 
 
-def get_retriever(k: int = 8, persist_dir: str | None = None, where: dict | None = None) -> Chroma:
+def get_retriever(k: int = 8, persist_dir: str | None = None, where: dict | None = None) -> VectorStoreRetriever:
     """
     Returns a retriever object from the Chroma vector store.
 
