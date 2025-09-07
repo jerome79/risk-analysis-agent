@@ -1,9 +1,11 @@
 import sys
 from pathlib import Path
+from typing import Any, cast
 
 import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
+from langchain_core.runnables import Runnable
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -32,13 +34,13 @@ def _get_zsl() -> ZeroShotRisk:
 
 
 @st.cache_resource
-def _get_llm() -> object:
+def _get_llm() -> Runnable[Any, Any]:
     """
     Returns a cached instance of the LLM (Large Language Model) used for text generation and analysis.
 
     :return: LLM instance
     """
-    return get_llm()
+    return cast(Runnable[Any, Any], get_llm())
 
 
 # ---------- Tabs ----------
