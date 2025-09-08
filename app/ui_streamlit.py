@@ -43,11 +43,17 @@ def _get_llm() -> Runnable[Any, Any]:
     return cast(Runnable[Any, Any], get_llm())
 
 
-# ---------- Tabs ----------
-tab_ingest, tab_analyze, tab_qa = st.tabs(["Ingest", "Analyze", "Q&A"])
+# -----------Helper ----------
+# Add this to app/ui_streamlit.py
 
-# ---------- Ingest ----------
-with tab_ingest:
+
+def ingest_tab() -> None:
+    """
+    Displays the UI for ingesting filings and indexing them.
+
+    Allows the user to specify a folder containing TXT filings,
+    triggers ingestion and indexing, and displays a preview of the ingested data.
+    """
     st.subheader("1) Ingest filings and index")
     folder = st.text_input("Folder with TXT filings (issuer/year/*.txt)", "data/samples")
     if st.button("Index folder", use_container_width=True):
@@ -60,8 +66,14 @@ with tab_ingest:
             st.success(f"Indexed {len(df)} chunks → Chroma")
             st.dataframe(df.head(10))
 
-# ---------- Analyze ----------
-with tab_analyze:
+
+def analyze_tab() -> None:
+    """
+    Displays the UI for analyzing and classifying top risks.
+
+    Allows the user to specify issuer, fiscal year, and focus, retrieves relevant document chunks,
+    classifies them, displays tags, and generates an executive summary using an LLM.
+    """
     st.subheader("2) Classify & summarize top risks")
     issuer = st.text_input("Issuer (folder name)", "ACME_CORP")
     year = st.text_input("Fiscal year", "2024")
@@ -76,9 +88,7 @@ with tab_analyze:
         if not docs:
             st.warning("No documents returned. Did you index the right issuer/year?")
         else:
-            # Build context with citations
             context = "\n\n".join([f"[{d.metadata.get('chunk_id','?')}] {d.page_content}" for d in docs])
-            # Zero-shot classify top chunks
             zsl = _get_zsl()
             top_texts = [d.page_content for d in docs[: min(8, len(docs))]]
             tags = zsl.classify(top_texts, top_k=3)
@@ -96,12 +106,21 @@ with tab_analyze:
             st.write("**Tagged chunks (top-8):**")
             st.dataframe(pd.DataFrame(rows))
 
-            # Structured summary with citations
             llm = _get_llm()
             prompt = RISK_SUMMARY_PROMPT.format(issuer=issuer, year=year, context=context)
             st.write("### Executive Summary")
             st.write(llm.invoke(prompt))
 
+
+# ---------- Tabs ----------
+tab_ingest, tab_analyze, tab_qa = st.tabs(["Ingest", "Analyze", "Q&A"])
+
+# ---------- Ingest ----------
+with tab_ingest:
+    ingest_tab()
+# ---------- Analyze ----------
+with tab_analyze:
+    analyze_tab()
 # ---------- Q&A ----------
 with tab_qa:
     st.subheader("3) Ask questions (RAG with citations)")

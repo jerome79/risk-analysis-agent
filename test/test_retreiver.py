@@ -4,9 +4,9 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+root = Path(__file__).resolve().parents[1]
+if str(root) not in sys.path:
+    sys.path.insert(0, str(root))
 from app.retriever import get_retriever, index_dataframe
 
 SCHEMA = ["issuer", "fiscal_year", "section", "filepath", "text", "chunk_id"]
