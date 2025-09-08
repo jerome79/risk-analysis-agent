@@ -46,7 +46,7 @@ jobs:
 
       - name: Coverage
         run: |
-          coverage run -m pytest
+          coverage run --source=app -m pytest test/
           coverage report -m
 
       - name: Security audit (non-blocking initially)
