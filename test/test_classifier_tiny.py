@@ -8,7 +8,7 @@ if str(root) not in sys.path:
     sys.path.insert(0, str(root))
 
 
-from app.classifier import ZeroShotRisk
+from risk_analysis_agent.classifier import ZeroShotRisk
 
 
 def test_zero_shot_classifier_with_tiny_model(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -3,7 +3,7 @@ import os
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-from app.taxonomy import canonical_labels
+from risk_analysis_agent.taxonomy import canonical_labels
 
 # ---- Perf/control knobs (safe defaults; override in .env) -------------------
 MODEL_ID = os.getenv("ZSL_MODEL", "facebook/bart-large-mnli")

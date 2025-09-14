@@ -11,14 +11,14 @@ if str(root) not in sys.path:
 # test/test_ui_streamlit_analyze.py
 import pandas as pd
 
-from app.ui_streamlit import _get_llm, _get_zsl
+from risk_analysis_agent.ui_streamlit import _get_llm, _get_zsl
 
 
 def test_get_llm_returns_runnable() -> None:
     """
     Test that _get_llm returns the mocked runnable object from get_llm.
     """
-    with patch("app.ui_streamlit.get_llm") as mock_get_llm:
+    with patch("risk_analysis_agent.ui_streamlit.get_llm") as mock_get_llm:
         mock_runnable = MagicMock()
         mock_get_llm.return_value = mock_runnable
         result = _get_llm()
@@ -27,12 +27,12 @@ def test_get_llm_returns_runnable() -> None:
 
 def test_cache_functions(monkeypatch: pytest.MonkeyPatch) -> None:
     """
-    Test that the cache functions in app.ui_streamlit return the expected mocked values.
+    Test that the cache functions in risk_analysis_agent.ui_streamlit return the expected mocked values.
     """
 
     # Mock dependencies for cache functions
-    monkeypatch.setattr("app.ui_streamlit.ZeroShotRisk", lambda: "ZSL")
-    monkeypatch.setattr("app.ui_streamlit.get_llm", lambda: "LLM")
+    monkeypatch.setattr("risk_analysis_agent.ui_streamlit.ZeroShotRisk", lambda: "ZSL")
+    monkeypatch.setattr("risk_analysis_agent.ui_streamlit.get_llm", lambda: "LLM")
 
     # Test the cache_resource functions
     zsl = _get_zsl()
@@ -44,9 +44,9 @@ def test_cache_functions(monkeypatch: pytest.MonkeyPatch) -> None:
 
 def test_ingest_tab(monkeypatch: pytest.MonkeyPatch) -> None:
     """
-    Test the ingest_tab function in app.ui_streamlit by mocking Streamlit UI and app functions.
+    Test the ingest_tab function in risk_analysis_agent.ui_streamlit by mocking Streamlit UI and risk_analysis_agent functions.
     """
-    import app.ui_streamlit
+    import risk_analysis_agent.ui_streamlit
 
     # Mock Streamlit UI calls
     monkeypatch.setattr("streamlit.subheader", lambda *a, **k: None)
@@ -56,26 +56,26 @@ def test_ingest_tab(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr("streamlit.success", lambda *a, **k: None)
     monkeypatch.setattr("streamlit.dataframe", lambda *a, **k: None)
 
-    # Mock app functions
+    # Mock risk_analysis_agent functions
     monkeypatch.setattr(
-        app.ui_streamlit,
+        risk_analysis_agent.ui_streamlit,
         "ingest_folder",
         lambda folder: pd.DataFrame(
             [{"issuer": "ACME_CORP", "fiscal_year": "2024", "section": "Item 1A", "filepath": "somepath", "text": "txt", "chunk_id": "id"}]
         ),
     )
-    monkeypatch.setattr(app.ui_streamlit, "save_parquet", lambda df, path: None)
-    monkeypatch.setattr(app.ui_streamlit, "index_dataframe", lambda df: None)
+    monkeypatch.setattr(risk_analysis_agent.ui_streamlit, "save_parquet", lambda df, path: None)
+    monkeypatch.setattr(risk_analysis_agent.ui_streamlit, "index_dataframe", lambda df: None)
 
     # Run tab logic
-    app.ui_streamlit.ingest_tab()
+    risk_analysis_agent.ui_streamlit.ingest_tab()
 
 
 def test_analyze_tab(monkeypatch: pytest.MonkeyPatch) -> None:
     """
-    Test the analyze_tab function in app.ui_streamlit by mocking Streamlit UI, retriever, classifier, and LLM.
+    Test the analyze_tab function in risk_analysis_agent.ui_streamlit by mocking Streamlit UI, retriever, classifier, and LLM.
     """
-    import app.ui_streamlit
+    import risk_analysis_agent.ui_streamlit
 
     # Patch Streamlit UI elements
     monkeypatch.setattr("streamlit.subheader", lambda *a, **k: None)
@@ -110,7 +110,7 @@ def test_analyze_tab(monkeypatch: pytest.MonkeyPatch) -> None:
             """
             return [DummyDoc() for _ in range(8)]
 
-    monkeypatch.setattr(app.ui_streamlit, "get_retriever", lambda **k: DummyRetriever())
+    monkeypatch.setattr(risk_analysis_agent.ui_streamlit, "get_retriever", lambda **k: DummyRetriever())
 
     # Mock classifier and LLM
     class DummyZSL:
@@ -129,7 +129,7 @@ def test_analyze_tab(monkeypatch: pytest.MonkeyPatch) -> None:
             return [[("Market", 0.9), ("Credit", 0.8), ("Operational", 0.7)] for _ in texts]
             return [[("Market", 0.9), ("Credit", 0.8), ("Operational", 0.7)] for _ in texts]
 
-    monkeypatch.setattr(app.ui_streamlit, "_get_zsl", lambda: DummyZSL())
+    monkeypatch.setattr(risk_analysis_agent.ui_streamlit, "_get_zsl", lambda: DummyZSL())
 
     class DummyLLM:
         def invoke(self, prompt: str) -> str:
@@ -144,8 +144,8 @@ def test_analyze_tab(monkeypatch: pytest.MonkeyPatch) -> None:
             """
             return "Summary"
 
-    monkeypatch.setattr(app.ui_streamlit, "_get_llm", lambda: DummyLLM())
-    monkeypatch.setattr(app.ui_streamlit, "RISK_SUMMARY_PROMPT", "Issuer: {issuer}\nYear: {year}\nContext: {context}")
+    monkeypatch.setattr(risk_analysis_agent.ui_streamlit, "_get_llm", lambda: DummyLLM())
+    monkeypatch.setattr(risk_analysis_agent.ui_streamlit, "RISK_SUMMARY_PROMPT", "Issuer: {issuer}\nYear: {year}\nContext: {context}")
 
     # Run tab logic
-    app.ui_streamlit.analyze_tab()
+    risk_analysis_agent.ui_streamlit.analyze_tab()

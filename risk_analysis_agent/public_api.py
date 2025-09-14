@@ -1,15 +1,15 @@
 import sys
 from pathlib import Path
 
-from app.ui_streamlit import _get_zsl
+from risk_analysis_agent.ui_streamlit import _get_zsl
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 
-from app.llm import get_llm  # if your summary uses LLM
-from app.retriever import get_retriever  # whatever you use to open Chroma/FAISS
+from risk_analysis_agent.llm import get_llm  # if your summary uses LLM
+from risk_analysis_agent.retriever import get_retriever  # whatever you use to open Chroma/FAISS
 
 
 def summarize_risk(issuer: str, year: int, question: str = "top risks", k: int = 8) -> dict:

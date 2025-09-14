@@ -4,7 +4,7 @@ from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 if str(root) not in sys.path:
     sys.path.insert(0, str(root))
-from app.prompts import QA_PROMPT, RISK_SUMMARY_PROMPT
+from risk_analysis_agent.prompts import QA_PROMPT, RISK_SUMMARY_PROMPT
 
 
 def test_risk_summary_prompt_exists() -> None:

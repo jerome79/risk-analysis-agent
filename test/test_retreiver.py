@@ -7,7 +7,7 @@ import pytest
 root = Path(__file__).resolve().parents[1]
 if str(root) not in sys.path:
     sys.path.insert(0, str(root))
-from app.retriever import get_retriever, index_dataframe
+from risk_analysis_agent.retriever import get_retriever, index_dataframe
 
 SCHEMA = ["issuer", "fiscal_year", "section", "filepath", "text", "chunk_id"]
 
@@ -26,7 +26,7 @@ class FakeEmbedder:
 
 def test_retriever_filters_and_returns_docs(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     # Patch embedding to avoid downloading sentence-transformers
-    import app.retriever as retr
+    import risk_analysis_agent.retriever as retr
 
     monkeypatch.setattr(retr, "get_embedder", lambda: FakeEmbedder(8))
 
