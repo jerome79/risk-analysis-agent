@@ -4,7 +4,7 @@ import pandas as pd
 from langchain_community.vectorstores import Chroma
 from langchain_core.vectorstores import VectorStoreRetriever
 
-from app.embeddings import get_embedder
+from risk_analysis_agent.embeddings import get_embedder
 
 
 def get_vectorstore(persist_dir: str | None = None) -> Chroma:

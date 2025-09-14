@@ -47,7 +47,7 @@ show_missing = true
 
 [project]
 name = "risk-analysis-agent"
-version = "0.1.0"
+version = "0.1.1"
 requires-python = ">=3.10"
 dependencies = ["pandas","langchain","langchain-community","chromadb"]
 
@@ -56,5 +56,5 @@ requires = ["setuptools","wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-include = ["app*"]
+include = ["risk_analysis_agent*"]
 exclude = ["data*"]

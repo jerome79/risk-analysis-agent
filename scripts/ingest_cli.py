@@ -1,7 +1,7 @@
 import argparse
 
-from app.ingest import ingest_folder
-from app.retriever import index_dataframe
+from risk_analysis_agent.ingest import ingest_folder
+from risk_analysis_agent.retriever import index_dataframe
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()

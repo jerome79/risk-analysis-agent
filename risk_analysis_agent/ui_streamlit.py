@@ -11,11 +11,11 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from app.classifier import ZeroShotRisk
-from app.ingest import ingest_folder, save_parquet
-from app.llm import get_llm
-from app.prompts import QA_PROMPT, RISK_SUMMARY_PROMPT
-from app.retriever import get_retriever, index_dataframe
+from risk_analysis_agent.classifier import ZeroShotRisk
+from risk_analysis_agent.ingest import ingest_folder, save_parquet
+from risk_analysis_agent.llm import get_llm
+from risk_analysis_agent.prompts import QA_PROMPT, RISK_SUMMARY_PROMPT
+from risk_analysis_agent.retriever import get_retriever, index_dataframe
 
 load_dotenv()
 st.set_page_config(page_title="Risk Analysis Agent", layout="wide")
@@ -44,7 +44,7 @@ def _get_llm() -> Runnable[Any, Any]:
 
 
 # -----------Helper ----------
-# Add this to app/ui_streamlit.py
+# Add this to risk_analysis_agent/ui_streamlit.py
 
 
 def ingest_tab() -> None:

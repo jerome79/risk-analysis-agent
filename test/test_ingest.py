@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from app.ingest import SCHEMA, ingest_folder
+from risk_analysis_agent.ingest import SCHEMA, ingest_folder
 
 
 def test_ingest_creates_expected_schema_and_rows(tmp_path: Path) -> None:

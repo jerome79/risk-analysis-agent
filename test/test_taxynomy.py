@@ -5,7 +5,7 @@ root = Path(__file__).resolve().parents[1]
 if str(root) not in sys.path:
     sys.path.insert(0, str(root))
 
-from app.taxonomy import canonical_labels, to_key
+from risk_analysis_agent.taxonomy import canonical_labels, to_key
 
 
 def test_taxonomy_labels_and_keys() -> None:

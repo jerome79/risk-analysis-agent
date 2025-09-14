@@ -8,7 +8,7 @@ root = Path(__file__).resolve().parents[1]
 if str(root) not in sys.path:
     sys.path.insert(0, str(root))
 
-from app.public_api import summarize_risk
+from risk_analysis_agent.public_api import summarize_risk
 
 
 @pytest.fixture
@@ -40,9 +40,9 @@ def test_summarize_risk_basic(mock_docs: list) -> None:
         None
     """
     with (
-        patch("app.public_api.get_retriever") as mock_retriever,
-        patch("app.public_api._get_zsl") as mock_zsl,
-        patch("app.public_api.get_llm") as mock_llm,
+        patch("risk_analysis_agent.public_api.get_retriever") as mock_retriever,
+        patch("risk_analysis_agent.public_api._get_zsl") as mock_zsl,
+        patch("risk_analysis_agent.public_api.get_llm") as mock_llm,
     ):
         mock_retriever.return_value.invoke.return_value = mock_docs
         mock_zsl.return_value.classify.return_value = [{"label": "Risk", "confidence": 0.9}]
