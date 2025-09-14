@@ -44,3 +44,17 @@ omit = ["tests/*"]
 fail_under = 80
 skip_covered = true
 show_missing = true
+
+[project]
+name = "risk-analysis-agent"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = ["pandas","langchain","langchain-community","chromadb"]
+
+[build-system]
+requires = ["setuptools","wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+exclude = ["data*"]

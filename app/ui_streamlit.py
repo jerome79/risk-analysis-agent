@@ -94,7 +94,7 @@ def analyze_tab() -> None:
             tags = zsl.classify(top_texts, top_k=3)
 
             rows = []
-            for d, ts in zip(docs[: len(top_texts)], tags):
+            for d, ts in zip(docs[: len(top_texts)], tags, strict=False):
                 rows.append(
                     {
                         "chunk_id": d.metadata.get("chunk_id", "?"),

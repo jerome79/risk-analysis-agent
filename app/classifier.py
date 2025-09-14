@@ -59,7 +59,7 @@ class ZeroShotRisk:
             logits = self.mdl(**enc).logits  # shape [B, 3] = [contradiction, neutral, entailment]
             probs = torch.softmax(logits, dim=-1)[:, -1].tolist()  # entailment prob per label
 
-            scores.extend(zip(chunk_labels, map(float, probs)))
+            scores.extend(zip(chunk_labels, map(float, probs), strict=False))
 
         return scores
 
