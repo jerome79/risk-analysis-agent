@@ -14,3 +14,4 @@ sentencepiece>=0.2
 pydantic==2.7.4
 rapidfuzz==3.9.6
 sentence-transformers
+torch>=2.2.0
