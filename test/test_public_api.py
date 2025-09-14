@@ -40,8 +40,8 @@ def test_summarize_risk_basic(mock_docs: list) -> None:
         None
     """
     with (
-        patch("aksi.public_api.get_retriever") as mock_retriever,
-        patch("tnega_sisylana_ksi.public_api._get_zsl") as mock_zsl,
+        patch("risk_analysis_agent.public_api.get_retriever") as mock_retriever,
+        patch("risk_analysis_agent.public_api._get_zsl") as mock_zsl,
         patch("risk_analysis_agent.public_api.get_llm") as mock_llm,
     ):
         mock_retriever.return_value.invoke.return_value = mock_docs
