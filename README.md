@@ -61,11 +61,11 @@ cp .env.example .env
 data/samples/ACME_CORP/2024/item_1a.txt
 
 ### Run the UI:
-streamlit run app/ui_streamlit.py
+streamlit run risk_analysis_agent/ui_streamlit.py
 
 ## 🗂️ Risk Taxonomy
 
-Default labels (see app/taxonomy.py):
+Default labels (see risk_analysis_agent/taxonomy.py):
 
 * Market
 
@@ -87,7 +87,7 @@ Default labels (see app/taxonomy.py):
 
 * Model Risk
 
-You can edit app/taxonomy.py to customize.
+You can edit risk_analysis_agent/taxonomy.py to customize.
 
 ## 🔍 Zero-Shot Classification (How It Works)
 
@@ -139,7 +139,7 @@ item1a.txt::2	Cybersecurity (0.81)	High
 
 
 # 🧪 Repo Layout
-app/
+risk_analysis_agent/
   ├─ taxonomy.py      # labels & helpers
   ├─ ingest.py        # read .txt, chunk, normalize
   ├─ embeddings.py    # MiniLM embeddings (HF)

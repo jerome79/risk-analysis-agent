@@ -1,0 +1,20 @@
+Company: JPMorgan Chase
+Year: 2024
+Form: 10-K
+Period End: 2024-12-31
+Filed: 2025-02-14
+Where to read Item 1A (Risk Factors):
+- SEC complete submission text file: https://www.sec.gov/Archives/edgar/data/19617/0000019617-25-000270.txt
+- Main HTML document: https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/jpm-20241231.htm (Item 1A is in Part I)
+
+Note: To respect copyright, this file does not reproduce the full Item 1A text. Use the official SEC links above for the full wording.
+
+Quick risk themes (high-level, summarized):
+- Credit risk (borrower defaults) and allowance adequacy
+- Market risk (rates, equity, credit spreads) and trading activities
+- Liquidity and funding, deposit flows, capital requirements
+- Regulatory and legal/compliance changes and enforcement
+- Operational risk, model risk, and third‑party/vendor risk
+- Cybersecurity and fraud
+- Macroeconomic, geopolitical, and systemic risks
+- Reputation risk and conduct risk

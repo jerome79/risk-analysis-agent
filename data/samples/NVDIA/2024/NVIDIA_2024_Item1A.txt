@@ -1,0 +1,18 @@
+Company: NVIDIA
+Year: 2024
+Form: 10-K
+Period End: 2024-01-28
+Filed: 2024-02-23
+Where to read Item 1A (Risk Factors):
+- Complete TXT: https://www.sec.gov/Archives/edgar/data/1045810/0001045810-24-000018.txt
+- Main HTML: https://www.sec.gov/Archives/edgar/data/1045810/000104581024000018/nvda-20240128.htm
+
+Risk themes (summary):
+- Cyclicality and volatility in semiconductor demand
+- Dependence on foundry capacity and supply chain constraints
+- Competition in GPUs, AI and data center markets
+- Export controls, trade and geopolitical risks
+- IP protection and licensing
+- Rapid technology change and product transition
+- Cybersecurity and data privacy
+- Dependence on key personnel

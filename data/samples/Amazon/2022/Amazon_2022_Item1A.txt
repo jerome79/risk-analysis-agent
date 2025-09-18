@@ -1,0 +1,20 @@
+Company: Amazon
+Year: 2022
+Form: 10-K
+Period End: 2022-12-31
+Filed: 2023-02-03
+Where to read Item 1A (Risk Factors):
+- SEC complete submission text file: https://www.sec.gov/Archives/edgar/data/1018724/0001018724-23-000004.txt
+- Main HTML document: https://www.sec.gov/Archives/edgar/data/1018724/000101872423000004/amzn-20221231.htm (Item 1A is in Part I)
+
+Note: To respect copyright, this file does not reproduce the full Item 1A text. Use the official SEC links above for the full wording.
+
+Quick risk themes (high-level, summarized):
+- Intense competition across retail, cloud (AWS), and advertising
+- Regulatory and antitrust scrutiny worldwide
+- Cybersecurity, privacy, and data protection
+- Third‑party seller and marketplace integrity
+- Supply chain, logistics network, and labor relations
+- Dependence on technology infrastructure and uptime (AWS)
+- Foreign exchange and macroeconomic conditions
+- Content and IP rights, counterfeit risk

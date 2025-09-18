@@ -1,0 +1,19 @@
+Company: Barclays PLC
+Year: 2024
+Form: 20-F
+Period End: 2024-12-31
+Filed: 2025-02-13
+Where to read Item 1A (Risk Factors):
+- SEC complete submission text file: https://www.sec.gov/Archives/edgar/data/312069/0000312069-25-000114.txt
+- Main HTML document: https://www.sec.gov/Archives/edgar/data/312069/000031206925000114/bcs-20241231.htm (Item 1A is in Part I)
+
+Note: To respect copyright, this file does not reproduce the full Item 1A text. Use the official SEC links above for the full wording.
+
+Quick risk themes (high-level, summarized):
+- Credit, market, and liquidity risks across portfolios
+- Capital and regulatory change (Basel, ring‑fencing, stress tests)
+- Conduct/compliance, legal and remediation risks
+- Operational resilience and cyber threats
+- Macroeconomic and geopolitical risks (UK/Europe exposure)
+- IBOR transition/benchmark risks and model risk
+- Climate‑related risks and transition to low‑carbon economy
