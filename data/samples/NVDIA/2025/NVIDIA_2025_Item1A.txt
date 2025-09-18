@@ -1,0 +1,5 @@
+Company: NVIDIA
+Year: 2025 (placeholder)
+Status: Filing not yet available
+Note: As of 2025-09-14, the Form 10-K for period ending 2025-01-26 (FY2025) is not yet filed.
+Latest available filing: https://www.sec.gov/Archives/edgar/data/1045810/000104581024000018/nvda-20240128.htm

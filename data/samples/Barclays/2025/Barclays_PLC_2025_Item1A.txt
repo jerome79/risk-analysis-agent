@@ -1,0 +1,6 @@
+Company: Barclays PLC
+Year: 2025 (placeholder)
+Status: Filing not yet available
+Note: As of 2025-09-14, the Form 20-F for period ended 2025-12-31 is not filed yet. The latest available annual report covers 2024 (filed Feb 2025).
+Latest available annual filing:
+- Main HTML: https://www.sec.gov/Archives/edgar/data/312069/000031206925000114/bcs-20241231.htm

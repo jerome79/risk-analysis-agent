@@ -1,0 +1,5 @@
+Company: Meta Platforms
+Year: 2025 (placeholder)
+Status: Filing not yet available
+Note: As of 2025-09-14, the Form 10-K for period ended 2025-12-31 is not yet filed.
+Latest available filing: https://www.sec.gov/Archives/edgar/data/1326801/000132680125000011/meta-20241231.htm

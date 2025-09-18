@@ -1,0 +1,20 @@
+Company: Tesla
+Year: 2023
+Form: 10-K
+Period End: 2023-12-31
+Filed: 2024-01-31
+Where to read Item 1A (Risk Factors):
+- SEC complete submission text file: https://www.sec.gov/Archives/edgar/data/1318605/0001628280-24-002390.txt
+- Main HTML document: https://www.sec.gov/Archives/edgar/data/1318605/000162828024002390/tsla-20231231.htm (Item 1A is in Part I)
+
+Note: To respect copyright, this file does not reproduce the full Item 1A text. Use the official SEC links above for the full wording.
+
+Quick risk themes (high-level, summarized):
+- Production and supply chain disruptions
+- Competitive pressure in EVs and energy storage
+- Regulatory and policy changes (autonomy, safety, emissions)
+- Reliance on key personnel and brand perception
+- Battery/raw materials availability and costs
+- Cybersecurity and data/privacy risks
+- Macroeconomic, FX, and interest rate conditions
+- Litigation, product safety, and recalls

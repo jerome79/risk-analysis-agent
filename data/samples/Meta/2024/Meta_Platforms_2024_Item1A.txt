@@ -1,0 +1,18 @@
+Company: Meta Platforms
+Year: 2024
+Form: 10-K
+Period End: 2024-12-31
+Filed: 2025-01-31
+Where to read Item 1A (Risk Factors):
+- Complete TXT: https://www.sec.gov/Archives/edgar/data/1326801/0001326801-25-000011.txt
+- Main HTML: https://www.sec.gov/Archives/edgar/data/1326801/000132680125000011/meta-20241231.htm
+
+Risk themes (summary):
+- User growth and engagement uncertainty across Facebook, Instagram, etc.
+- Advertising demand volatility and competition
+- Privacy, data protection, and regulatory scrutiny (GDPR, etc.)
+- Content moderation and harmful content risks
+- Metaverse/AR/VR investment and execution risks
+- Platform security and cybersecurity threats
+- Intellectual property and technology changes
+- Macroeconomic and FX conditions
