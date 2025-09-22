@@ -1,66 +1,75 @@
+from __future__ import annotations
+
 import os
 from typing import Any
 
 import chromadb
 import pandas as pd
 from langchain_chroma import Chroma
-from langchain_core.vectorstores import VectorStoreRetriever
+from langchain_huggingface import HuggingFaceEmbeddings
 
-from risk_analysis_agent.embeddings import get_embedder
+from .setting import Settings
 
 
-def get_vectorstore(persist_dir: str | None = None) -> Chroma:
+def get_embedder(model: str | None = None) -> HuggingFaceEmbeddings:
     """
-    Returns a Chroma vector store instance, using the provided persist directory or the default from environment.
+    Returns a HuggingFaceEmbeddings instance for the specified model.
 
     Args:
-        persist_dir (str | None): Directory to persist the vector store. If None, uses CHROMA_PERSIST_DIR env var or '.chroma-risk'.
+        model (str | None): The name of the embedding model to use. If None, uses the default from settings.
 
     Returns:
-        Chroma: An instance of the Chroma vector store.
+        HuggingFaceEmbeddings: The embedding function instance.
     """
-    persist = persist_dir or os.getenv("CHROMA_PERSIST_DIR", ".chroma-risk")
-    return Chroma(
-        client=chromadb.PersistentClient(path=str(persist)),
-        collection_name="risk_docs",
-        embedding_function=get_embedder(),
-    )
+    cfg = Settings()
+    return HuggingFaceEmbeddings(model_name=model or cfg.embedding_model)
 
 
-def index_dataframe(df: pd.DataFrame, persist_dir: str | None = None) -> Chroma:
+def get_vectorstore(collection: str = "risk_docs") -> Chroma:
+    """
+    Initializes and returns a Chroma vector store client for the specified collection.
+
+    Args:
+        collection (str): The name of the Chroma collection to use. Defaults to "risk_docs".
+
+    Returns:
+        Chroma: An instance of the Chroma vector store for the given collection.
+    """
+    cfg = Settings()
+    os.environ["CHROMADB_TELEMETRY_IMPLEMENTATION"] = "none"
+    os.environ["ANONYMIZED_TELEMETRY"] = "false"
+    os.makedirs(cfg.chroma_persist_dir, exist_ok=True)
+    client = chromadb.PersistentClient(path=cfg.chroma_persist_dir)
+    return Chroma(client=client, collection_name=collection, embedding_function=get_embedder())
+
+
+def get_retriever(k: int = 5, where: Any | None = None) -> Chroma:
+    """
+    Returns a retriever object for querying the Chroma vector store.
+
+    Args:
+        k (int): Number of results to return. Defaults to 5.
+        where (dict | None): Optional filter for metadata fields.
+
+    Returns:
+        Chroma: A retriever configured for MMR search.
+    """
+    vs = get_vectorstore()
+    kwargs = {"k": k}
+    if where:  # OMIT empty filters; Chroma 1.x rejects {}
+        kwargs["filter"] = where
+    return vs.as_retriever(search_type="mmr", search_kwargs=kwargs)
+
+
+def index_dataframe(df: pd.DataFrame) -> None:
     """
     Indexes a pandas DataFrame into the Chroma vector store.
 
     Args:
-        df (pandas.DataFrame): DataFrame with a 'text' column and optional metadata columns.
-        persist_dir (str | None): Directory to persist the vector store. If None, uses CHROMA_PERSIST_DIR env var or '.chroma-risk'.
-
-    Returns:
-        Chroma: The updated Chroma vector store instance.
+        df (pandas.DataFrame): DataFrame containing a 'text' column and optional metadata columns.
     """
-    vs = get_vectorstore(persist_dir)
+    vs = get_vectorstore()
     texts = df["text"].astype(str).tolist()
     metas = df.drop(columns=["text"], errors="ignore").to_dict(orient="records")
     ids = [f"doc-{i}" for i in range(len(texts))]
     vs.add_texts(texts=texts, metadatas=metas, ids=ids)
-    return vs
-
-
-def get_retriever(k: int = 8, persist_dir: str | None = None, where: Any | None = None) -> VectorStoreRetriever:
-    """
-    Returns a retriever object from the Chroma vector store.
-
-    Args:
-        k (int): Number of results to retrieve.
-        persist_dir (str | None): Directory to persist the vector store. If None, uses CHROMA_PERSIST_DIR env var or '.chroma-risk'.
-        where (dict | None): Optional metadata filter for retrieval.
-
-    Returns:
-        VectorStoreRetriever: A retriever object from the Chroma vector store.
-    """
-    vs = get_vectorstore(persist_dir)
-    search_kwargs = {"k": k, "fetch_k": max(20, k * 2), "lambda_mult": 0.2}
-    if where:
-        search_kwargs["filter"] = where
-
-    return vs.as_retriever(search_type="mmr", search_kwargs=search_kwargs)
