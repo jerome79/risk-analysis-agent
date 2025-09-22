@@ -2,7 +2,7 @@ version: "3.9"
 services:
   app:
     build: .
-    ports: ["8502:8502"]
+    ports: ["8501:8501"]
     environment:
       - PYTHONUNBUFFERED=1
       - OMP_NUM_THREADS=6
@@ -13,7 +13,7 @@ services:
       - ./:/app
       - hf_cache:/root/.cache/huggingface
       - chroma:/data/chroma
-    command: streamlit run risk_analysis_agent/ui_streamlit.py --server.port=8502 --server.headless=true
+    command: streamlit run risk_analysis_agent/ui_streamlit.py --server.port=8501 --server.headless=true
 
   # optional local LLM (for Q&A / summaries)
   ollama:

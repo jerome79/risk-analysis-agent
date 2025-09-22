@@ -7,7 +7,7 @@ A domain-focused extension of the Finance RAG Agent: adds a risk classifier laye
 git clone https://github.com/jerome79/risk-analysis-agent.git
 cd risk-analysis-agent
 make demo
-# open http://localhost:8502
+# open http://localhost:8501
 ```
 
 ![CI](https://github.com/jerome79/risk-analysis-agent/actions/workflows/ci.yml/badge.svg)
@@ -16,14 +16,14 @@ make demo
 ## Run with Docker
 ```bash
 docker compose up --build
-# App → http://localhost:8502
+# App → http://localhost:8501
 # (Optional) Ollama API → http://localhost:11434
 ```
 
 ## One-liner CLI
 ```bash
 pip install -e .
-msa demo   # opens http://localhost:8501 with a tiny sample
+msa demo   # opens http://localhost:8502 with a tiny sample
 ```
 ## Architecture
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for pipeline + trade-offs.

@@ -25,7 +25,7 @@ audit:
 all: fmt lint type test
 
 run:
-	streamlit run risk_analysis_agent/ui_streamlit.py --server.port 8502
+	streamlit run risk_analysis_agent/ui_streamlit.py --server.port 8501
 
 demo:
 	python -m risk_analysis_agent.cli demo
