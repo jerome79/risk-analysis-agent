@@ -109,7 +109,7 @@ def analyze_tab() -> None:
             llm = _get_llm()
             prompt = RISK_SUMMARY_PROMPT.format(issuer=issuer, year=year, context=context)
             st.write("### Executive Summary")
-            st.write(llm.invoke(prompt))
+            st.write(llm.invoke(prompt).content)
 
 
 # ---------- Tabs ----------
@@ -134,7 +134,7 @@ with tab_qa:
         else:
             context = "\n\n".join([f"[{d.metadata.get('chunk_id','?')}] {d.page_content}" for d in docs])
             ans = _get_llm().invoke(QA_PROMPT.format(question=q, context=context))
-            st.write(ans)
+            st.write(ans.content)
             with st.expander("Sources"):
                 st.write(
                     pd.DataFrame(

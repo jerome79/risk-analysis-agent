@@ -1,16 +1,22 @@
+# risk_analysis_agent/llm.py
+
+from __future__ import annotations
+
 import os
 
-from langchain_community.llms import Ollama
+from langchain_ollama import ChatOllama
 
 
-def get_llm() -> Ollama:
+def get_llm(temperature: float = 0.2, base_url: str | None = None, model: str | None = None) -> ChatOllama:
     """
-    Returns an Ollama LLM instance configured with model and temperature
-    from environment variables.
-
-    Returns:
-        Ollama: The configured Ollama language model instance.
+    Return a ChatOllama (LangChain 0.3) instance.
+    Note: invoke() returns a BaseMessage; use .content to read the text.
     """
-    model = os.getenv("OLLAMA_MODEL", "mistral")
-    temperature = float(os.getenv("LLM_TEMPERATURE", "0.2"))
-    return Ollama(model=model, temperature=temperature)
+    # Resolve base_url deterministically and avoid any scope ambiguity
+    resolved_base_url = base_url if base_url is not None else os.getenv("OLLAMA_BASE_URL")  # e.g. "http://localhost:11434"
+    model = model if model is not None else os.getenv("OLLAMA_MODEL", "mistral")
+    kwargs = {"model": model, "temperature": temperature}
+    if resolved_base_url:
+        kwargs["base_url"] = resolved_base_url
+
+    return ChatOllama(**kwargs)

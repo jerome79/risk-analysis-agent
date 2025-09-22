@@ -49,7 +49,16 @@ show_missing = true
 name = "risk-analysis-agent"
 version = "0.2.0"
 requires-python = ">=3.10"
-dependencies = ["pandas","langchain","langchain-community","chromadb"]
+dependencies = [
+  "langchain==0.3.27",
+  "langchain-chroma==0.2.6",
+  "langchain-huggingface==0.3.1",
+  "langchain-ollama==0.3.8",         # only if you use Ollama
+  "chromadb==1.0.21",
+  "sentence-transformers==2.7.0",
+  "transformers>=4.41.0",
+  "streamlit>=1.34.0",
+]
 
 [build-system]
 requires = ["setuptools","wheel"]
