@@ -21,7 +21,7 @@ def get_vectorstore(persist_dir: str | None = None) -> Chroma:
     """
     persist = persist_dir or os.getenv("CHROMA_PERSIST_DIR", ".chroma-risk")
     return Chroma(
-        client=chromadb.PersistentClient(path=persist),
+        client=chromadb.PersistentClient(path=str(persist)),
         collection_name="risk_docs",
         embedding_function=get_embedder(),
     )
