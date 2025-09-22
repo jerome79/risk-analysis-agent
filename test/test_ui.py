@@ -60,9 +60,7 @@ def test_ingest_tab(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         risk_analysis_agent.ui_streamlit,
         "ingest_folder",
-        lambda folder: pd.DataFrame(
-            [{"issuer": "ACME_CORP", "fiscal_year": "2024", "section": "Item 1A", "filepath": "somepath", "text": "txt", "chunk_id": "id"}]
-        ),
+        lambda folder: pd.DataFrame([{"issuer": "ACME_CORP", "fiscal_year": "2024", "section": "Item 1A", "filepath": "somepath", "text": "txt", "chunk_id": "id"}]),
     )
     monkeypatch.setattr(risk_analysis_agent.ui_streamlit, "save_parquet", lambda df, path: None)
     monkeypatch.setattr(risk_analysis_agent.ui_streamlit, "index_dataframe", lambda df: None)
@@ -79,9 +77,7 @@ def test_analyze_tab(monkeypatch: pytest.MonkeyPatch) -> None:
 
     # Patch Streamlit UI elements
     monkeypatch.setattr("streamlit.subheader", lambda *a, **k: None)
-    monkeypatch.setattr(
-        "streamlit.text_input", lambda label, val=None: "ACME_CORP" if "Issuer" in label else "2024" if "Fiscal year" in label else "key risks"
-    )
+    monkeypatch.setattr("streamlit.text_input", lambda label, val=None: "ACME_CORP" if "Issuer" in label else "2024" if "Fiscal year" in label else "key risks")
     monkeypatch.setattr("streamlit.slider", lambda *a, **k: 8)
     monkeypatch.setattr("streamlit.button", lambda *a, **k: True)
     monkeypatch.setattr("streamlit.warning", lambda *a, **k: None)

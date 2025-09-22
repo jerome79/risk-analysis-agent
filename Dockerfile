@@ -8,7 +8,7 @@ COPY constraints.txt constraints.txt
 RUN python -m pip install --upgrade pip setuptools wheel
 # pin CPU torch from official index (faster & stable)
 RUN pip install --extra-index-url https://download.pytorch.org/whl/cpu -c constraints.txt torch==2.4.1
-RUN pip install -r requirements.txt -c constraints.txt --prefer-binary
+RUN pip install --no-cache-dir -r requirements.txt -c constraints.txt
 
 COPY . .
 EXPOSE 8502

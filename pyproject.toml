@@ -1,9 +1,9 @@
 [tool.black]
-line-length = 150
+line-length = 175
 target-version = ["py310"]
 
 [tool.ruff]
-line-length = 150
+line-length = 175
 src = ["src", "."]
 fix = true
 
@@ -58,3 +58,6 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 include = ["risk_analysis_agent*"]
 exclude = ["data*"]
+
+[project.scripts]
+msa = "risk_analysis_agent.cli:main"
