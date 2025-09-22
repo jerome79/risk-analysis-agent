@@ -6,6 +6,7 @@ from typing import Any
 import chromadb
 import pandas as pd
 from langchain_chroma import Chroma
+from langchain_core.vectorstores import VectorStoreRetriever
 from langchain_huggingface import HuggingFaceEmbeddings
 
 from .setting import Settings
@@ -43,7 +44,7 @@ def get_vectorstore(collection: str = "risk_docs") -> Chroma:
     return Chroma(client=client, collection_name=collection, embedding_function=get_embedder())
 
 
-def get_retriever(k: int = 5, where: Any | None = None) -> Chroma:
+def get_retriever(k: int = 5, where: Any | None = None) -> VectorStoreRetriever:
     """
     Returns a retriever object for querying the Chroma vector store.
 
