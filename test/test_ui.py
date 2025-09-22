@@ -128,7 +128,13 @@ def test_analyze_tab(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(risk_analysis_agent.ui_streamlit, "_get_zsl", lambda: DummyZSL())
 
     class DummyLLM:
-        def invoke(self, prompt: str) -> str:
+        def __init__(self, content: str = "Summary") -> None:
+            """
+            Initialize the DummyLLM instance.
+            """
+            self.content = content
+
+        def invoke(self, prompt: str) -> "DummyLLM":
             """
             Generate a summary based on the provided prompt.
 
@@ -136,9 +142,10 @@ def test_analyze_tab(monkeypatch: pytest.MonkeyPatch) -> None:
                 prompt (str): The input prompt for the LLM.
 
             Returns:
-                str: The generated summary.
+                dict: A dictionary with a 'content' key containing the generated summary.
             """
-            return "Summary"
+            self.content = "Summary"
+            return self
 
     monkeypatch.setattr(risk_analysis_agent.ui_streamlit, "_get_llm", lambda: DummyLLM())
     monkeypatch.setattr(risk_analysis_agent.ui_streamlit, "RISK_SUMMARY_PROMPT", "Issuer: {issuer}\nYear: {year}\nContext: {context}")

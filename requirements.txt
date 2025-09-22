@@ -3,14 +3,25 @@ python-dotenv==1.0.1
 streamlit==1.37.1
 matplotlib==3.9.0
 
-langchain==0.2.16
-langchain-community==0.2.16
-chromadb==0.5.5
+# LangChain (top-level only)
+langchain==0.3.27
 
-transformers==4.43.3
+# Integrations
+langchain-chroma==0.2.6
+langchain-huggingface==0.3.1
+langchain-ollama==0.3.8
+langchain-text-splitters==0.3.11
+
+# Vector DB
+chromadb==1.0.21
+
+# Models
+sentence-transformers==2.7.0
+transformers>=4.41.0
+
 torch>=2.2
 sentencepiece>=0.2
 
-pydantic==2.7.4
+pydantic>=2.9,<3.0
 rapidfuzz==3.9.6
-sentence-transformers
+sentence-transformers==2.7.0

@@ -4,7 +4,7 @@ import os
 import sys
 from pathlib import Path
 
-from langchain_community.llms import Ollama
+from langchain_ollama import ChatOllama
 
 root = Path(__file__).resolve().parents[1]
 if str(root) not in sys.path:
@@ -20,7 +20,7 @@ def test_llm_main() -> None:
     Replace 'main' with the actual function name if different.
     """
     result = get_llm()
-    assert isinstance(result, Ollama)  # Check if result is an instance of Ollama
+    assert isinstance(result, ChatOllama)  # Check if result is an instance of ChatOllama
 
 
 def test_llm_model() -> None:
