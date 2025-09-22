@@ -14,7 +14,7 @@ test:
 	pytest
 
 cov:
-	coverage run -m pytest
+	coverage run --source=risk_analysis_agent -m pytest test/
 	coverage report -m
 	coverage html
 
