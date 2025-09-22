@@ -28,7 +28,7 @@ def test_retriever_filters_and_returns_docs(monkeypatch: pytest.MonkeyPatch, tmp
     # Patch embedding to avoid downloading sentence-transformers
     import risk_analysis_agent.retriever as retr
 
-    monkeypatch.setattr(retr, "get_embedder", lambda: FakeEmbedder(8))
+    monkeypatch.setattr(retr, "get_embedder", lambda: FakeEmbedder(384))
 
     # Build tiny in-memory corpus
     rows = [
@@ -52,13 +52,11 @@ def test_retriever_filters_and_returns_docs(monkeypatch: pytest.MonkeyPatch, tmp
     df = pd.DataFrame(rows, columns=SCHEMA)
 
     # Use a temp Chroma persist dir for isolation
-    persist_dir = tmp_path / ".chroma-test"
-    index_dataframe(df, persist_dir=str(persist_dir))
+    index_dataframe(df)
 
     # Filter to only 2024
     retriever = get_retriever(
         k=2,
-        persist_dir=str(persist_dir),
         where={"$and": [{"issuer": "ACME_CORP"}, {"fiscal_year": "2024"}]},
     )
     docs = retriever.invoke("funding costs and liquidity risk")

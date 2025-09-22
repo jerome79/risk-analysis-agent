@@ -1,30 +1,43 @@
 version: "3.9"
-services:
-  app:
-    build: .
-    ports: ["8501:8501"]
-    environment:
-      - PYTHONUNBUFFERED=1
-      - OMP_NUM_THREADS=6
-      - MKL_NUM_THREADS=6
-      - TOKENIZERS_PARALLELISM=true
-      - CHROMA_PERSIST_DIR=/data/chroma
-    volumes:
-      - ./:/app
-      - hf_cache:/root/.cache/huggingface
-      - chroma:/data/chroma
-    command: streamlit run risk_analysis_agent/ui_streamlit.py --server.port=8501 --server.headless=true
 
-  # optional local LLM (for Q&A / summaries)
+services:
   ollama:
     image: ollama/ollama:latest
-    ports: ["11434:11434"]
-    volumes: ["ollama:/root/.ollama"]
+    ports: ["11434:11434"]     # optional host access
+    volumes:
+      - ollama:/root/.ollama
     healthcheck:
       test: ["CMD", "ollama", "list"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+    restart: unless-stopped
+
+  app:
+    build: .
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      PYTHONUNBUFFERED: "1"
+      OMP_NUM_THREADS: "6"
+      MKL_NUM_THREADS: "6"
+      TOKENIZERS_PARALLELISM: "true"
+
+      CHROMA_PERSIST_DIR: /data/chroma
+      OLLAMA_BASE_URL: http://ollama:11434
+
+      LLM_MODEL: ${LLM_MODEL:-gemma3:1b}
+      LLM_TEMPERATURE: ${LLM_TEMPERATURE:-0.2}
+    ports: ["8501:8501"]
+    volumes:
+      - ./:/app
+      - hf_cache:/root/.cache/huggingface
+      - chroma:/data/chroma
+    command: >
+      streamlit run risk_analysis_agent/ui_streamlit.py
+      --server.port=8501 --server.headless=true
+    restart: unless-stopped
 
 volumes:
   hf_cache:

@@ -16,6 +16,8 @@ make demo
 ## Run with Docker
 ```bash
 docker compose up --build
+docker compose exec ollama ollama pull gemma3:1b
+
 # App → http://localhost:8501
 # (Optional) Ollama API → http://localhost:11434
 ```
@@ -208,3 +210,29 @@ Example risk output table (you can paste your screenshot too)
 Classifier roadmap staged for interviews
 
 Do you want me to also add a “Comparison” section (Project 1 vs Project 2 vs Project 3) in the README so you can show progression to interviewers?
+
+### Troubleshooting
+
+**Ollama connection refused (Errno 111)**
+- Local run: make sure `ollama serve` is running and `OLLAMA_BASE_URL=http://127.0.0.1:11434`.
+- Docker Compose: the app talks to `http://ollama:11434` (set via env). Pull a model:
+  `docker compose exec ollama ollama pull gemma3:1b`.
+
+**Chroma errors after upgrading**
+- If you upgraded from older versions, delete the old on-disk DB once:
+  `rm -rf .chroma-risk` (local) or remove the `chroma` volume (Docker), then re-ingest.
+
+**Empty filter error**
+- Pass no `filter` when you don't need metadata filtering. An empty `{}` is invalid in Chroma 1.x.
+
+### Config Table
+
+| Variable             |                          Default (local) |             In Docker | Notes                                |
+| -------------------- | ---------------------------------------: | --------------------: | ------------------------------------ |
+| `CHROMA_PERSIST_DIR` |                           `.chroma-risk` |        `/data/chroma` | Where the vector DB is stored        |
+| `EMBEDDING_MODEL`    | `sentence-transformers/all-MiniLM-L6-v2` |                  same | Free, local                          |
+| `LLM_PROVIDER`       |                                 `ollama` |              `ollama` |                                      |
+| `LLM_MODEL`          |                              `gemma3:1b` |                  same | Change to your preferred local model |
+| `OLLAMA_BASE_URL`    |                 `http://127.0.0.1:11434` | `http://ollama:11434` | Container uses service name          |
+| `LLM_TEMPERATURE`    |                                    `0.2` |                  same |                                      |
+| `ZSL_MODEL`          |               `facebook/bart-large-mnli` |                  same | Zero-shot classifier                 |
