@@ -1,9 +1,9 @@
 [tool.black]
-line-length = 150
+line-length = 175
 target-version = ["py310"]
 
 [tool.ruff]
-line-length = 150
+line-length = 175
 src = ["src", "."]
 fix = true
 
@@ -38,7 +38,7 @@ testpaths = ["tests"]
 [tool.coverage.run]
 branch = true
 source = ["risk_analysis_agent"]  # adjust to your package
-omit = ["tests/*"]
+omit = ["test/*","risk_analysis_agent/cli.py"]
 
 [tool.coverage.report]
 fail_under = 80
@@ -47,7 +47,7 @@ show_missing = true
 
 [project]
 name = "risk-analysis-agent"
-version = "0.1.1"
+version = "0.2.0"
 requires-python = ">=3.10"
 dependencies = ["pandas","langchain","langchain-community","chromadb"]
 
@@ -58,3 +58,6 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 include = ["risk_analysis_agent*"]
 exclude = ["data*"]
+
+[project.scripts]
+msa = "risk_analysis_agent.cli:main"
