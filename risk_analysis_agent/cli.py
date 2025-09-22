@@ -12,7 +12,7 @@ def serve() -> int:
     Returns:
         int: The exit code from the Streamlit process.
     """
-    return subprocess.call([sys.executable, "-m", "streamlit", "run", "risk_analysis_agent/ui_streamlit.py"])
+    return subprocess.call([sys.executable, "-m", "streamlit", "run", "risk_analysis_agent/ui_streamlit.py", "--server.port", "8501", "--server.headless", "true"])
 
 
 def benchmark(args: argparse.Namespace) -> int:

@@ -28,8 +28,8 @@ run:
 	streamlit run risk_analysis_agent/ui_streamlit.py --server.port 8501
 
 demo:
-	python -m risk_analysis_agent.cli demo
+	python -m risk_analysis_agent.cli demo --port 8501
 serve:
-	python -m risk_analysis_agent.cli serve
+	python -m risk_analysis_agent.cli serve --port 8501
 bench:
 	python -m risk_analysis_agent.cli benchmark --csv data/news_perf_test_10k.csv --model vader
