@@ -28,7 +28,7 @@ def test_retriever_filters_and_returns_docs(monkeypatch: pytest.MonkeyPatch, tmp
     # Patch embedding to avoid downloading sentence-transformers
     import risk_analysis_agent.retriever as retr
 
-    monkeypatch.setattr(retr, "get_embedder", lambda: FakeEmbedder(8))
+    monkeypatch.setattr(retr, "get_embedder", lambda: FakeEmbedder(384))
 
     # Build tiny in-memory corpus
     rows = [
