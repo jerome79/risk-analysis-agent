@@ -23,7 +23,7 @@ docker compose up --build
 ## One-liner CLI
 ```bash
 pip install -e .
-msa demo   # opens http://localhost:8502 with a tiny sample
+msa demo   # opens http://localhost:8501 with a tiny sample
 ```
 ## Architecture
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for pipeline + trade-offs.
@@ -92,7 +92,7 @@ cp .env.example .env
 data/samples/ACME_CORP/2024/item_1a.txt
 
 ### Run the UI:
-streamlit run risk_analysis_agent/ui_streamlit.py
+streamlit run risk_analysis_agent/ui_streamlit.py --server.port 8501 --server.headless true
 
 ## 🗂️ Risk Taxonomy
 
