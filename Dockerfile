@@ -11,5 +11,5 @@ RUN pip install --extra-index-url https://download.pytorch.org/whl/cpu -c constr
 RUN pip install --no-cache-dir -r requirements.txt -c constraints.txt
 
 COPY . .
-EXPOSE 8502
-CMD ["streamlit","run","risk_analysis_agent/ui_streamlit.py","--server.port=8502","--server.headless=true"]
+EXPOSE 8501
+CMD ["streamlit","run","risk_analysis_agent/ui_streamlit.py","--server.port=8501","--server.headless=true"]
