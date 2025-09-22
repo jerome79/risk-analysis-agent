@@ -38,7 +38,7 @@ testpaths = ["tests"]
 [tool.coverage.run]
 branch = true
 source = ["risk_analysis_agent"]  # adjust to your package
-omit = ["tests/*"]
+omit = ["test/*"]
 
 [tool.coverage.report]
 fail_under = 80
