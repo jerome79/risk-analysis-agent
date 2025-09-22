@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    ports: ["8502:8502"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - OMP_NUM_THREADS=6
+      - MKL_NUM_THREADS=6
+      - TOKENIZERS_PARALLELISM=true
+      - CHROMA_PERSIST_DIR=/data/chroma
+    volumes:
+      - ./:/app
+      - hf_cache:/root/.cache/huggingface
+      - chroma:/data/chroma
+    command: streamlit run risk_analysis_agent/ui_streamlit.py --server.port=8502 --server.headless=true
+
+  # optional local LLM (for Q&A / summaries)
+  ollama:
+    image: ollama/ollama:latest
+    ports: ["11434:11434"]
+    volumes: ["ollama:/root/.ollama"]
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  hf_cache:
+  chroma:
+  ollama:

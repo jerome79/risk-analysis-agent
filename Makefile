@@ -1,25 +1,28 @@
 .PHONY: fmt lint type test cov audit all
 
 fmt:
-\tblack .
-\truff check --fix .
+    black .
+    ruff check --fix .
 
 lint:
-\truff check .
+    ruff check .
 
 type:
-\tmypy .
+    mypy .
 
 test:
-\tpytest
+    pytest
 
 cov:
-\tcoverage run -m pytest
-\tcoverage report -m
-\tcoverage html
+    coverage run -m pytest
+    coverage report -m
+    coverage html
 
 audit:
-\tbandit -r . -x tests || true
-\tpip-audit -s || true
+    bandit -r . -x tests || true
+    pip-audit -s || true
 
 all: fmt lint type test
+
+run:
+    streamlit run risk_analysis_agent/ui_streamlit.py --server.port 8502

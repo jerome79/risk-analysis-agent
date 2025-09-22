@@ -2,6 +2,16 @@
 
 A domain-focused extension of the Finance RAG Agent: adds a risk classifier layer on top of retrieval so outputs are structured, explainable, and auditable for Portfolio Managers and Risk teams.
 
+## Quick Demo (60–90s)
+```bash
+git clone https://github.com/jerome79/risk-analysis-agent.git
+cd risk-analysis-agent
+make demo
+# open http://localhost:8502
+```
+
+![CI](https://github.com/jerome79/risk-analysis-agent/actions/workflows/ci.yml/badge.svg)
+
 ## 🎯 Business Goal
 
 * Turn dense disclosures (10-K Item 1A, KIIDs, prospectuses) into actionable, comparable risk insights:
@@ -178,4 +188,10 @@ Classifier roadmap staged for interviews
 
 Do you want me to also add a “Comparison” section (Project 1 vs Project 2 vs Project 3) in the README so you can show progression to interviewers?
 
-Sources
+
+## Run with Docker
+```bash
+docker compose up --build
+# App → http://localhost:8502
+# (Optional) Ollama API → http://localhost:11434
+```
