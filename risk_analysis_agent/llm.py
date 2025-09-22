@@ -15,8 +15,7 @@ def get_llm(temperature: float = 0.2, base_url: str | None = None, model: str | 
     # Resolve base_url deterministically and avoid any scope ambiguity
     resolved_base_url = base_url if base_url is not None else os.getenv("OLLAMA_BASE_URL")  # e.g. "http://localhost:11434"
     model = model if model is not None else os.getenv("OLLAMA_MODEL", "mistral")
-    kwargs = {"model": model, "temperature": temperature}
     if resolved_base_url:
-        kwargs["base_url"] = resolved_base_url
-
-    return ChatOllama(**kwargs)
+        return ChatOllama(model=model, temperature=temperature, base_url=resolved_base_url)
+    else:
+        return ChatOllama(model=model, temperature=temperature)
