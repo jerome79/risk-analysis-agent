@@ -64,26 +64,3 @@ jobs:
 
       - name: Pull gemma3:1b model
         run: ollama pull gemma3:1b
-  test:
-    runs-on: ubuntu-latest
-    services:
-      ollama:
-        image: ollama/ollama:latest
-        ports: ["11434:11434"]
-        options: >-
-          --health-cmd="curl -f http://localhost:11434/api/tags || exit 1"
-          --health-interval=5s
-          --health-timeout=2s
-          --health-retries=30
-    env:
-      OLLAMA_URL: http://127.0.0.1:11434
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - run: pip install -e .[test]
-      - name: Pull model
-        run: |
-          curl -sS -X POST http://127.0.0.1:11434/api/pull -d '{"name":"gemma3:1b"}'
-      - run: pytest -q
