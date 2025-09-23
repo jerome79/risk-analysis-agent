@@ -24,6 +24,7 @@ Key features:
 * **Retrieval-augmented generation (RAG)** using **Chroma** and **MiniLM** embeddings.
 * **Streamlit web UI** and **CLI** for ingestion, analysis, and Q&A.
 * Runs fully **local and free** via [Ollama](https://ollama.com/) and open-source LLMs (e.g., Mistral, Gemma).
+* Can connect to openai and claude models if API keys are provided.
 
 ---
 
@@ -68,12 +69,19 @@ Create a `.env` file or export env vars to override.
 
 ## Architecture
 
+The Risk Analysis Agent processes documents through several modular components:
+
 ```
 [TXT/PDF] → [Chunking + MiniLM Embeddings] → [Chroma DB]
        → [Zero-shot NLI Risk Classifier] → [Summary + Q&A with citations]
 ```
 
-A detailed diagram and explanation are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+- **Input:** Accepts TXT or PDF financial/regulatory documents.
+- **Chunking & Embeddings:** Splits text and generates MiniLM embeddings for semantic search.
+- **Chroma DB:** Stores and retrieves document chunks efficiently.
+- **Risk Classifier:** Tags risks using a zero-shot NLI model.
+- **RAG Engine:** Answers questions and summarizes, citing source text.
+- **Output:** Provides structured risk summaries and Q\&A with traceable citations.
 
 ---
 
