@@ -1,238 +1,117 @@
 # Risk Analysis Agent
 
-A domain-focused extension of the Finance RAG Agent: adds a risk classifier layer on top of retrieval so outputs are structured, explainable, and auditable for Portfolio Managers and Risk teams.
+**Local, explainable RAG that turns 10-K, KIID, or fund-prospectus text into structured risk insights—with citations—no cloud required.**
 
-## Quick Demo (60–90s)
+[![CI](https://github.com/jerome79/risk-analysis-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/jerome79/risk-analysis-agent/actions)
+[![Coverage](https://img.shields.io/codecov/c/github/jerome79/risk-analysis-agent)](https://app.codecov.io/gh/jerome79/risk-analysis-agent)
+
+---
+
+## Overview
+Risk Analysis Agent ingests large financial or regulatory documents and surfaces **auditable risk summaries** across seven categories:
+
+- **Market**
+- **Liquidity**
+- **Credit**
+- **Operational**
+- **Cyber**
+- **Regulatory / ESG**
+- **Model**
+
+Key features:
+
+* **Zero-shot NLI classifier (BART-MNLI)** for risk tagging, with confidence scores.
+* **Retrieval-augmented generation (RAG)** using **Chroma** and **MiniLM** embeddings.
+* **Streamlit web UI** and **CLI** for ingestion, analysis, and Q&A.
+* Runs fully **local and free** via [Ollama](https://ollama.com/) and open-source LLMs (e.g., Mistral, Gemma).
+
+---
+
+## Quick Start
+
+### One-command demo
+```bash
+make demo
+# or with Docker
+docker compose up --build
+docker compose exec ollama ollama pull gemma3:1b
+```
+Then open [http://localhost:8501](http://localhost:8501).
+(Optional) Ollama API → http://localhost:11434
+
+This seeds sample filings, builds the index, and launches the Streamlit app for interactive Q&A.
+
+---
+
+## Installation (local dev)
+
 ```bash
 git clone https://github.com/jerome79/risk-analysis-agent.git
 cd risk-analysis-agent
-make demo
-# open http://localhost:8501
-```
-
-![CI](https://github.com/jerome79/risk-analysis-agent/actions/workflows/ci.yml/badge.svg)
-
-
-## Run with Docker
-```bash
-docker compose up --build
-docker compose exec ollama ollama pull gemma3:1b
-
-# App → http://localhost:8501
-# (Optional) Ollama API → http://localhost:11434
-```
-
-## One-liner CLI
-```bash
 pip install -e .
-msa demo   # opens http://localhost:8501 with a tiny sample
+# optional: ollama pull mistral
 ```
+
+---
+
+## Configuration
+
+| Variable            | Default              | Description                           |
+|---------------------|----------------------|---------------------------------------|
+| `ZSL_MODEL`         | `facebook/bart-large-mnli` | Zero-shot classifier model |
+| `LLM_MODEL`         | `mistral`           | Local Ollama model for summaries      |
+| `CHROMA_PERSIST_DIR`| `.chroma`           | Vector DB path                        |
+
+Create a `.env` file or export env vars to override.
+
+---
+
 ## Architecture
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for pipeline + trade-offs.
 
-## CI & Quality
-![Tests](https://img.shields.io/badge/tests-passing-brightgreen)
-![Coverage](https://img.shields.io/badge/coverage-70%25+-blue)
+```
+[TXT/PDF] → [Chunking + MiniLM Embeddings] → [Chroma DB]
+       → [Zero-shot NLI Risk Classifier] → [Summary + Q&A with citations]
+```
 
+A detailed diagram and explanation are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
-## 🎯 Business Goal
+---
 
-* Turn dense disclosures (10-K Item 1A, KIIDs, prospectuses) into actionable, comparable risk insights:
+## Security
 
-* Classify chunks into a risk taxonomy
+- **Data never leaves your machine.**
+- All models run locally; ideal for regulated or sensitive documents.
 
-* Summarize top risks with citations
+---
 
-* Enable Q&A with source documents
+## Roadmap
 
-* Compare year-over-year changes (optional)
+- Few-shot / fine-tuned classifiers (FinBERT, RoBERTa)
+- Hybrid keyword–rules engine for higher precision/recall
+- PDF → TXT converter for fully automated ingestion
 
-* Personas: Portfolio Managers, Traders, Chief Risk Officers, Product Managers.
+---
 
-## 🧱 Architecture
-TXT filings (issuer/year/*.txt)
-│
-▼
-[Ingest] ──► chunked docs (text + metadata)
-│ │
-│ └──► [Chroma Vector Store] (embeddings + metadata)
-│ ▲
-│ │
-└──► [Zero-Shot Risk Classifier] ◄─┘ (taxonomy tags per chunk)
+## Contributing
 
-UI (Streamlit)
-├─ Ingest: index corpus
-├─ Analyze: retrieve top chunks → classify → summarize (citations)
-└─ Q&A: RAG answers + sources
+Issues and PRs welcome!
+Run tests with:
 
-LLM (Ollama/Mistral) — local, free
-Embeddings (MiniLM) — local, free
-Zero-shot (BART-MNLI) — local, free
+```bash
+pytest
+```
 
-## ✨ Features
+---
 
-* Ingest .txt filings and chunk with provenance (issuer, year, file, chunk_id)
+## License
+MIT License © 2025 Jérôme **(jerome79)**
 
-* Local embeddings → Chroma persistent vector DB
+---
 
-* Zero-shot risk classification (BART-MNLI) across a risk taxonomy
+### GitHub Topics
+Add these under *Settings ▸ General ▸ Topics* for discoverability:
 
-* Executive summary grouped by categories with citations
-
-* Q&A over the corpus with sources
-
-* Fully local & free (Ollama + Hugging Face models)
-
-## 🚀 Quick Start
-git clone <repo> risk-analysis-agent
-cd risk-analysis-agent
-python -m venv .venv && . .venv/Scripts/activate   # (Windows)
-pip install -r requirements.txt
-cp .env.example .env
-
-### Add data:
-data/samples/ACME_CORP/2024/item_1a.txt
-
-### Run the UI:
-streamlit run risk_analysis_agent/ui_streamlit.py --server.port 8501 --server.headless true
-
-## 🗂️ Risk Taxonomy
-
-Default labels (see risk_analysis_agent/taxonomy.py):
-
-* Market
-
-* Liquidity
-
-* Credit
-
-* Operational
-
-* Cybersecurity
-
-* Regulatory / Legal
-
-* Supply Chain
-
-* ESG / Climate
-
-* Reputational
-
-* Model Risk
-
-You can edit risk_analysis_agent/taxonomy.py to customize.
-
-## 🔍 Zero-Shot Classification (How It Works)
-
-* Pretrained NLI model (facebook/bart-large-mnli)
-
-For each chunk and label, we score entailment of the hypothesis:
-
-* “This text is about <label>.”
-
-The entailment probability = confidence score
-
-Top-k labels (or all above threshold) are displayed per chunk
-
-## 🔮 Classifier Roadmap (All Free & Local)
-
-* Phase 1 – Zero-Shot Baseline (current)
-
-facebook/bart-large-mnli
-
-No training needed, robust baseline
-
-* Phase 2 – Few-Shot Prompting
-
-Use local LLM (Mistral via Ollama)
-
-Add labeled examples in prompt for domain adaptation
-
-* Phase 3 – Fine-Tuned Local Classifier
-
-Train RoBERTa/FinBERT on a small labeled set (200–500 chunks)
-
-* Phase 4 – Hybrid / Rules
-
-Add keyword/regex rules for transparency
-
-Combine with ML scores for robustness
-
-## 📊 Example Output
-
-Sample input: ACME 2024, Item 1A
-
-Analyze tab output:
-
-Chunk ID	Risks	Confidence
-item1a.txt::0	Operational (0.86), Market (0.61)	High
-item1a.txt::1	Liquidity (0.72), Credit (0.55)	Medium
-item1a.txt::2	Cybersecurity (0.81)	High
-
-
-
-# 🧪 Repo Layout
-risk_analysis_agent/
-  ├─ taxonomy.py      # labels & helpers
-  ├─ ingest.py        # read .txt, chunk, normalize
-  ├─ embeddings.py    # MiniLM embeddings (HF)
-  ├─ retriever.py     # Chroma index + retriever (MMR, filters)
-  ├─ classifier.py    # zero-shot NLI tags
-  ├─ prompts.py       # summary + QA prompts (citations)
-  ├─ llm.py           # Ollama (Mistral/Gemma)
-  └─ ui_streamlit.py  # Streamlit UI
-
-scripts/
-  ├─ ingest_cli.py
-  └─ demo_classifier.py
-
-data/
-  └─ samples/         # place issuer/year/*.txt here
-
-## 🧰 Notes
-
-For PDFs, convert to .txt with tools like pdfminer.six or pypdf before ingestion
-
-Set CHROMA_PERSIST_DIR in .env to control DB location
-
-Keep LLM_TEMPERATURE low (0.0–0.2) for consistent summaries
-
-## 📜 License
-
-MIT
-
-👉 This new README now has:
-
-Clearer flow (goal → features → quick start → taxonomy → roadmap → output)
-
-Example risk output table (you can paste your screenshot too)
-
-Classifier roadmap staged for interviews
-
-Do you want me to also add a “Comparison” section (Project 1 vs Project 2 vs Project 3) in the README so you can show progression to interviewers?
-
-### Troubleshooting
-
-**Ollama connection refused (Errno 111)**
-- Local run: make sure `ollama serve` is running and `OLLAMA_BASE_URL=http://127.0.0.1:11434`.
-- Docker Compose: the app talks to `http://ollama:11434` (set via env). Pull a model:
-  `docker compose exec ollama ollama pull gemma3:1b`.
-
-**Chroma errors after upgrading**
-- If you upgraded from older versions, delete the old on-disk DB once:
-  `rm -rf .chroma-risk` (local) or remove the `chroma` volume (Docker), then re-ingest.
-
-**Empty filter error**
-- Pass no `filter` when you don't need metadata filtering. An empty `{}` is invalid in Chroma 1.x.
-
-### Config Table
-
-| Variable             |                          Default (local) |             In Docker | Notes                                |
-| -------------------- | ---------------------------------------: | --------------------: | ------------------------------------ |
-| `CHROMA_PERSIST_DIR` |                           `.chroma-risk` |        `/data/chroma` | Where the vector DB is stored        |
-| `EMBEDDING_MODEL`    | `sentence-transformers/all-MiniLM-L6-v2` |                  same | Free, local                          |
-| `LLM_PROVIDER`       |                                 `ollama` |              `ollama` |                                      |
-| `LLM_MODEL`          |                              `gemma3:1b` |                  same | Change to your preferred local model |
-| `OLLAMA_BASE_URL`    |                 `http://127.0.0.1:11434` | `http://ollama:11434` | Container uses service name          |
-| `LLM_TEMPERATURE`    |                                    `0.2` |                  same |                                      |
-| `ZSL_MODEL`          |               `facebook/bart-large-mnli` |                  same | Zero-shot classifier                 |
+```
+risk-analysis rag nlp zero-shot-classification streamlit ollama
+retrieval-augmented-generation financial-documents
+```
