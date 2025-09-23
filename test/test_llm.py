@@ -4,6 +4,7 @@ import os
 import sys
 from pathlib import Path
 
+import pytest
 from langchain_ollama import ChatOllama
 
 root = Path(__file__).resolve().parents[1]
@@ -13,6 +14,7 @@ if str(root) not in sys.path:
 from risk_analysis_agent.llm import get_llm
 
 
+@pytest.mark.skipif(os.environ.get("CI") == "true", reason="Ollama not available in CI")
 def test_llm_main() -> None:
     """
     Test the main LLM function for basic output or side effects.
@@ -23,6 +25,7 @@ def test_llm_main() -> None:
     assert isinstance(result, ChatOllama)  # Check if result is an instance of ChatOllama
 
 
+@pytest.mark.skipif(os.environ.get("CI") == "true", reason="Ollama not available in CI")
 def test_llm_model() -> None:
     """
     Test that the LLM model name matches the expected environment variable or default.
@@ -31,6 +34,7 @@ def test_llm_model() -> None:
     assert output.model == os.getenv("OLLAMA_MODEL", "mistral")
 
 
+@pytest.mark.skipif(os.environ.get("CI") == "true", reason="Ollama not available in CI")
 def test_llm_temperature() -> None:
     """
     Test that the LLM temperature value matches the expected environment variable or default.

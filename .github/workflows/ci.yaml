@@ -53,6 +53,17 @@ jobs:
         run: |
           bandit -r . -x tests || true
           pip-audit -s || true
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+
+      - name: Start Ollama server
+        run: |
+          ollama serve &
+          sleep 10
+
+      - name: Pull gemma3:1b model
+        run: ollama pull gemma3:1b
   test:
     runs-on: ubuntu-latest
     services:
