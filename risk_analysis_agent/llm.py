@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+from typing import Any
+
 import httpx
+from langchain_anthropic import ChatAnthropic
 from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
 
 from .setting import Settings
 
@@ -49,36 +53,48 @@ def _assert_up(url: str) -> None:
 
 
 def get_llm(
-    model: str | None = None,
-    temperature: float | None = None,
-    base_url: str | None = None,
-) -> ChatOllama:
+    provider: str | None = None, model: str | None = None, temperature: float | None = None, openai_api_key: str | None = None, anthropic_api_key: str | None = None
+) -> Any:
     """
-    Initialize and return a ChatOllama LLM client.
+    Initialize and return an LLM client (Ollama, OpenAI, or Claude/Anthropic).
 
     Args:
-        model (str | None): The model name to use. Defaults to value from settings.
-        temperature (float | None): Sampling temperature. Defaults to value from settings.
-        base_url (str | None): Override for the Ollama base URL.
+        provider (str | None): The LLM provider to use.
+        model (str | None): The model name to use.
+        temperature (float | None): Sampling temperature.
+        openai_api_key (str | None): API key for OpenAI.
+        anthropic_api_key (str | None): API key for Anthropic.
 
     Returns:
-        ChatOllama: An instance of the ChatOllama client.
+        LLM instance appropriate for the provider.
 
     Raises:
-        ValueError: If the LLM provider is not 'ollama'.
-        RuntimeError: If the Ollama service is not reachable.
+        ValueError: If the LLM provider is not supported or misconfigured.
     """
     cfg = Settings()
-    if cfg.llm_provider != "ollama":
-        raise ValueError(f"Only LLM_PROVIDER=ollama supported for now, got {cfg.llm_provider}")
-
-    model = model or cfg.llm_model
-    temperature = cfg.llm_temperature if temperature is None else temperature
-    url = base_url or _resolve_ollama_url(cfg)
-
-    try:
+    provider = cfg.llm_provider if provider is None else provider
+    if provider == "ollama":
+        model = cfg.llm_model if model is None else model
+        temperature = cfg.llm_temperature if temperature is None else temperature
+        url = _resolve_ollama_url(cfg)
         _assert_up(url)
-    except Exception as e:
-        raise RuntimeError(f"Ollama not reachable at {url}. Start it locally (`ollama serve`) " f"and `ollama pull {model}`, or run docker compose.") from e
+        return ChatOllama(model=model, temperature=temperature, base_url=url)
 
-    return ChatOllama(model=model, temperature=temperature, base_url=url)
+    elif provider == "openai":
+        api_key = cfg.openai_api_key if openai_api_key is None else openai_api_key
+        if not api_key:
+            raise ValueError("OPENAI_API_KEY must be set for LLM_PROVIDER=openai")
+        model = model or cfg.openai_model
+        temperature = cfg.llm_temperature if temperature is None else temperature
+        return ChatOpenAI(openai_api_key=api_key, model_name=model, temperature=temperature)
+
+    elif provider in ("claude", "anthropic"):
+        api_key = cfg.anthropic_api_key if anthropic_api_key is None else anthropic_api_key
+        if not api_key:
+            raise ValueError("ANTHROPIC_API_KEY must be set for LLM_PROVIDER=claude")
+        model = model or cfg.anthropic_model
+        temperature = cfg.llm_temperature if temperature is None else temperature
+        return ChatAnthropic(anthropic_api_key=api_key, model=model, temperature=temperature)
+
+    else:
+        raise ValueError(f"Unsupported LLM_PROVIDER: {provider}")

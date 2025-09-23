@@ -1,11 +1,10 @@
 import sys
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
-from langchain_core.runnables import Runnable
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -34,17 +33,45 @@ def _get_zsl() -> ZeroShotRisk:
 
 
 @st.cache_resource
-def _get_llm() -> Runnable[Any, Any]:
+def _get_llm(provider: str, model: str, temperature: float, openai_api_key: str, anthropic_api_key: str) -> Any:
     """
-    Returns a cached instance of the LLM (Large Language Model) used for text generation and analysis.
+    Returns a cached LLM instance based on the selected provider, model, and temperature.
 
-    :return: LLM instance
+    Args:
+        provider (str): The LLM provider identifier (e.g., "openai", "claude", "ollama").
+        model (str): The model name to use.
+        temperature (float): Sampling temperature for the LLM.
+        openai_api_key (str, optional): API key for OpenAI, if required.
+        anthropic_api_key (str, optional): API key for Anthropic, if required.
+
+
+    Returns:
+        An LLM instance as returned by get_llm.
     """
-    return cast(Runnable[Any, Any], get_llm())
+    return get_llm(provider=provider, model=model, temperature=temperature, openai_api_key=openai_api_key, anthropic_api_key=anthropic_api_key)
 
 
 # -----------Helper ----------
 # Add this to risk_analysis_agent/ui_streamlit.py
+import os
+
+LLM_PROVIDERS = {
+    "Ollama (Mistral, Gemma, etc.)": {"id": "ollama", "models": ["gemma3:1b"]},
+    "OpenAI (GPT-3.5, GPT-4, etc.)": {"id": "openai", "models": ["gpt-3.5-turbo", "gpt-4o", "gpt-4-turbo"]},
+    "Claude (Anthropic)": {"id": "claude", "models": ["claude-3-haiku-20240307", "claude-3-sonnet-20240229", "claude-3-opus-20240229"]},
+}
+
+st.sidebar.header("🔧 LLM Settings")
+provider_name = st.sidebar.selectbox("LLM Provider", list(LLM_PROVIDERS.keys()), index=0)
+provider = LLM_PROVIDERS[provider_name]["id"]
+model = st.sidebar.selectbox("Model", LLM_PROVIDERS[provider_name]["models"], index=0)
+temperature = st.sidebar.slider("Temperature", 0.0, 1.0, 0.2, 0.05)
+
+# Optionally, set API keys in sidebar when needed
+if provider == "openai":
+    openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password", value=os.getenv("OPENAI_API_KEY", ""))
+if provider == "claude":
+    anthropic_api_key = st.sidebar.text_input("Anthropic API Key", type="password", value=os.getenv("ANTHROPIC_API_KEY", ""))
 
 
 def ingest_tab() -> None:
@@ -105,8 +132,7 @@ def analyze_tab() -> None:
                 )
             st.write("**Tagged chunks (top-8):**")
             st.dataframe(pd.DataFrame(rows))
-
-            llm = _get_llm()
+            llm = _get_llm(provider, model, temperature, openai_api_key if provider == "openai" else None, anthropic_api_key if provider == "claude" else None)
             prompt = RISK_SUMMARY_PROMPT.format(issuer=issuer, year=year, context=context)
             st.write("### Executive Summary")
             st.write(llm.invoke(prompt).content)
@@ -133,7 +159,8 @@ with tab_qa:
             st.warning("No documents returned.")
         else:
             context = "\n\n".join([f"[{d.metadata.get('chunk_id','?')}] {d.page_content}" for d in docs])
-            ans = _get_llm().invoke(QA_PROMPT.format(question=q, context=context))
+            llm = _get_llm(provider, model, temperature, openai_api_key if provider == "openai" else None, anthropic_api_key if provider == "claude" else None)
+            ans = llm.invoke(QA_PROMPT.format(question=q, context=context))
             st.write(ans.content)
             with st.expander("Sources"):
                 st.write(
