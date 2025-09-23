@@ -21,7 +21,8 @@ def test_get_llm_returns_runnable() -> None:
     with patch("risk_analysis_agent.ui_streamlit.get_llm") as mock_get_llm:
         mock_runnable = MagicMock()
         mock_get_llm.return_value = mock_runnable
-        result = _get_llm()
+        print(mock_get_llm)
+        result = _get_llm(None, None, 0.5, None, None)
         assert result == mock_runnable
 
 
@@ -32,12 +33,12 @@ def test_cache_functions(monkeypatch: pytest.MonkeyPatch) -> None:
 
     # Mock dependencies for cache functions
     monkeypatch.setattr("risk_analysis_agent.ui_streamlit.ZeroShotRisk", lambda: "ZSL")
-    monkeypatch.setattr("risk_analysis_agent.ui_streamlit.get_llm", lambda: "LLM")
+    monkeypatch.setattr("risk_analysis_agent.ui_streamlit.get_llm", lambda **kwargs: "LLM")
 
     # Test the cache_resource functions
     zsl = _get_zsl()
-    llm = _get_llm()
-
+    llm = _get_llm("ollama", None, 0.5, None, None)
+    print(llm)
     assert zsl == "ZSL"
     assert llm == "LLM"
 
@@ -133,6 +134,11 @@ def test_analyze_tab(monkeypatch: pytest.MonkeyPatch) -> None:
             Initialize the DummyLLM instance.
             """
             self.content = content
+            self.temperature = 0.5
+            self.provider = "openai"
+            self.model = "gpt-3.5-turbo"
+            self.openai_api_key = None
+            self.anthropic_api_key = None
 
         def invoke(self, prompt: str) -> "DummyLLM":
             """
@@ -147,7 +153,7 @@ def test_analyze_tab(monkeypatch: pytest.MonkeyPatch) -> None:
             self.content = "Summary"
             return self
 
-    monkeypatch.setattr(risk_analysis_agent.ui_streamlit, "_get_llm", lambda: DummyLLM())
+    monkeypatch.setattr(risk_analysis_agent.ui_streamlit, "_get_llm", lambda a, b, c, d, e: DummyLLM())
     monkeypatch.setattr(risk_analysis_agent.ui_streamlit, "RISK_SUMMARY_PROMPT", "Issuer: {issuer}\nYear: {year}\nContext: {context}")
 
     # Run tab logic

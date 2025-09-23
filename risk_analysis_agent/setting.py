@@ -22,6 +22,14 @@ class Settings:
     llm_temperature: float = float(os.getenv("LLM_TEMPERATURE", "0.2"))
     ollama_base_url: str | None = os.getenv("OLLAMA_BASE_URL")
 
+    # API KEY
+    openai_api_key: str | None = os.getenv("OPENAI_API_KEY")
+    openai_model: str = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
+
+    # Claude (Anthropic)
+    anthropic_api_key: str | None = os.getenv("ANTHROPIC_API_KEY")
+    anthropic_model: str = os.getenv("ANTHROPIC_MODEL", "claude-3-haiku-20240307")
+
     # Embeddings
     embedding_model: str = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 
