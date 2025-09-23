@@ -33,7 +33,7 @@ def _get_zsl() -> ZeroShotRisk:
 
 
 @st.cache_resource
-def _get_llm(provider: str, model: str, temperature: float, openai_api_key: str, anthropic_api_key: str) -> Any:
+def _get_llm(provider: str, model: str, temperature: float, openai_api_key: str | None, anthropic_api_key: str | None) -> Any:
     """
     Returns a cached LLM instance based on the selected provider, model, and temperature.
 
@@ -63,8 +63,8 @@ LLM_PROVIDERS = {
 
 st.sidebar.header("🔧 LLM Settings")
 provider_name = st.sidebar.selectbox("LLM Provider", list(LLM_PROVIDERS.keys()), index=0)
-provider = LLM_PROVIDERS[provider_name]["id"]
-model = st.sidebar.selectbox("Model", LLM_PROVIDERS[provider_name]["models"], index=0)
+provider = LLM_PROVIDERS[str(provider_name)]["id"]
+model = st.sidebar.selectbox("Model", LLM_PROVIDERS[str(provider_name)]["models"], index=0)
 temperature = st.sidebar.slider("Temperature", 0.0, 1.0, 0.2, 0.05)
 
 # Optionally, set API keys in sidebar when needed
@@ -132,7 +132,7 @@ def analyze_tab() -> None:
                 )
             st.write("**Tagged chunks (top-8):**")
             st.dataframe(pd.DataFrame(rows))
-            llm = _get_llm(provider, model, temperature, openai_api_key if provider == "openai" else None, anthropic_api_key if provider == "claude" else None)
+            llm = _get_llm(str(provider), str(model), temperature, openai_api_key if provider == "openai" else None, anthropic_api_key if provider == "claude" else None)
             prompt = RISK_SUMMARY_PROMPT.format(issuer=issuer, year=year, context=context)
             st.write("### Executive Summary")
             st.write(llm.invoke(prompt).content)
@@ -159,7 +159,7 @@ with tab_qa:
             st.warning("No documents returned.")
         else:
             context = "\n\n".join([f"[{d.metadata.get('chunk_id','?')}] {d.page_content}" for d in docs])
-            llm = _get_llm(provider, model, temperature, openai_api_key if provider == "openai" else None, anthropic_api_key if provider == "claude" else None)
+            llm = _get_llm(str(provider), str(model), temperature, openai_api_key if provider == "openai" else None, anthropic_api_key if provider == "claude" else None)
             ans = llm.invoke(QA_PROMPT.format(question=q, context=context))
             st.write(ans.content)
             with st.expander("Sources"):

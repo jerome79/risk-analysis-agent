@@ -75,7 +75,9 @@ def test_assert_up_success() -> None:
 def test_assert_up_failure() -> None:
     with patch("httpx.Client.get") as mock_get:
         mock_response = MagicMock()
-        mock_response.raise_for_status.side_effect = httpx.HTTPStatusError("fail", request=None, response=None)
+        request = httpx.Request("GET", "http://localhost:1234")
+        response = httpx.Response(500, request=request)
+        mock_response.raise_for_status.side_effect = httpx.HTTPStatusError("fail", request=request, response=response)
         mock_get.return_value = mock_response
         with pytest.raises(httpx.HTTPStatusError):
             _assert_up("http://localhost:1234")

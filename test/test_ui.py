@@ -22,7 +22,7 @@ def test_get_llm_returns_runnable() -> None:
         mock_runnable = MagicMock()
         mock_get_llm.return_value = mock_runnable
         print(mock_get_llm)
-        result = _get_llm(None, None, 0.5, None, None)
+        result = _get_llm("", "", 0.5, "", "")
         assert result == mock_runnable
 
 
@@ -37,7 +37,7 @@ def test_cache_functions(monkeypatch: pytest.MonkeyPatch) -> None:
 
     # Test the cache_resource functions
     zsl = _get_zsl()
-    llm = _get_llm("ollama", None, 0.5, None, None)
+    llm = _get_llm("ollama", "", 0.5, "", "")
     print(llm)
     assert zsl == "ZSL"
     assert llm == "LLM"

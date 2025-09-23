@@ -6,6 +6,7 @@ import httpx
 from langchain_anthropic import ChatAnthropic
 from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
+from pydantic import SecretStr
 
 from .setting import Settings
 
@@ -86,7 +87,7 @@ def get_llm(
             raise ValueError("OPENAI_API_KEY must be set for LLM_PROVIDER=openai")
         model = model or cfg.openai_model
         temperature = cfg.llm_temperature if temperature is None else temperature
-        return ChatOpenAI(openai_api_key=api_key, model_name=model, temperature=temperature)
+        return ChatOpenAI(api_key=SecretStr(api_key), model=model, temperature=temperature)
 
     elif provider in ("claude", "anthropic"):
         api_key = cfg.anthropic_api_key if anthropic_api_key is None else anthropic_api_key
@@ -94,7 +95,7 @@ def get_llm(
             raise ValueError("ANTHROPIC_API_KEY must be set for LLM_PROVIDER=claude")
         model = model or cfg.anthropic_model
         temperature = cfg.llm_temperature if temperature is None else temperature
-        return ChatAnthropic(anthropic_api_key=api_key, model=model, temperature=temperature)
+        return ChatAnthropic(api_key=SecretStr(api_key), model_name=model, temperature=temperature, timeout=10000, stop=None)
 
     else:
         raise ValueError(f"Unsupported LLM_PROVIDER: {provider}")
