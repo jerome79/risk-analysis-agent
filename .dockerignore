@@ -1,11 +1,83 @@
+# Version control
 .git
+.gitignore
+
+# Python virtual environments
 .venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Python cache and build artifacts
 __pycache__/
-*.pyc
-dist/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
 build/
-.env
+dist/
+*.egg-info/
+.eggs/
+.Python
+develop-eggs/
+downloads/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Test, coverage, and notebook artifacts
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+.notebooks/
+*.ipynb_checkpoints
+
+# Data and cache (custom)
 .chroma/
 data/
 demo/cache/
-.notebooks/
+
+# Environment files
+.env
+.env.*
+.python-version
+
+# Editor/IDE files
+.vscode/
+.spyderproject
+.spyproject
+.ropeproject
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Misc
+*.swp
+.DS_Store
+
+# Docker and Makefile (optional: remove these if you want them inside the image)
+Dockerfile
+docker-compose.yml
+Makefile
